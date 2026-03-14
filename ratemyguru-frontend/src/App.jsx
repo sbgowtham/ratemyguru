@@ -377,7 +377,7 @@ export default function RateMyGuru() {
               👋 {user.name.split(" ")[0]} · Logout
             </button>
           ) : (
-            <button className="btn-primary" onClick={loginWithLinkedIn} style={{ padding: "9px 18px", fontSize: 13, display: "flex", alignItems: "center", gap: 7 }}>
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="white" style={{ pointerEvents: "none" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>
               Login with LinkedIn
             </button>
