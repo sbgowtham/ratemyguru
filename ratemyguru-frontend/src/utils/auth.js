@@ -9,26 +9,31 @@ const LINKEDIN_CLIENT_ID = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
 // ============================================
 // LinkedIn OAuth — redirect user to LinkedIn
 // ============================================
-export function loginWithLinkedIn() {
-  const REDIRECT_URI = `${window.location.origin}/auth/linkedin/callback`;	
+//export function loginWithLinkedIn() {
+//  const REDIRECT_URI = `${window.location.origin}/auth/linkedin/callback`;	
+//  console.log("Login clicked!");
+//  console.log("Client ID:", LINKEDIN_CLIENT_ID);
+//  console.log("Redirect URI:", REDIRECT_URI);
+//
+//  const state = Math.random().toString(36).substring(2);
+//  localStorage.setItem("linkedin_oauth_state", state);
+//  const params = new URLSearchParams({
+//    response_type: "code",
+//    client_id: LINKEDIN_CLIENT_ID,
+//    redirect_uri: REDIRECT_URI,
+//    state,
+//    scope: "openid profile email",
+//  });
+//
+//  console.log("Redirecting to:", `https://www.linkedin.com/oauth/v2/authorization?${params}`);
+//  window.location.href = `https://www.linkedin.com/oauth/v2/authorization?${params}`;
+//}
+  export function loginWithLinkedIn() {
+  alert("Button clicked!"); // ADD THIS
   console.log("Login clicked!");
   console.log("Client ID:", LINKEDIN_CLIENT_ID);
-  console.log("Redirect URI:", REDIRECT_URI);
-
-  const state = Math.random().toString(36).substring(2);
-  localStorage.setItem("linkedin_oauth_state", state);
-  const params = new URLSearchParams({
-    response_type: "code",
-    client_id: LINKEDIN_CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
-    state,
-    scope: "openid profile email",
-  });
-
-  console.log("Redirecting to:", `https://www.linkedin.com/oauth/v2/authorization?${params}`);
-  window.location.href = `https://www.linkedin.com/oauth/v2/authorization?${params}`;
+  // ... rest of code
 }
-
 // ============================================
 // Get current logged in user
 // ============================================
