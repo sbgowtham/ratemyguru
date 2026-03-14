@@ -609,6 +609,8 @@ export default function RateMyGuru() {
   const [showAddCreator, setShowAddCreator] = useState(false);
   const [sort, setSort] = useState("rating");
   const [loaded, setLoaded] = useState(false);
+  const [user, setUser] = useState(getUser());
+  const handleLogout = () => { logout(); setUser(null); };
 
   useEffect(() => { setTimeout(() => setLoaded(true), 100); }, []);
 
@@ -631,21 +633,16 @@ export default function RateMyGuru() {
           <button className="btn-outline" onClick={() => setShowAddCreator(true)} style={{ padding: "9px 18px", fontSize: 13 }}>
             + Add Creator
           </button>
-         {getUser() ? (
-  <button className="btn-outline" onClick={logout} style={{ padding: "9px 18px", fontSize: 13 }}>
-    👋 {getUser().name.split(" ")[0]} · Logout
+        {user ? (
+  <button className="btn-outline" onClick={handleLogout} style={{ padding: "9px 18px", fontSize: 13 }}>
+    👋 {user.name.split(" ")[0]} · Logout
   </button>
 ) : (
-  <a 
-href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=86nqmaogrsbobc&redirect_uri=${encodeURIComponent('https://ratemyguru.in/auth/linkedin/callback')}&scope=openid%20profile%20email&state=xyz123`}
-style={{ padding: "9px 18px", fontSize: 13, background: "#FF6B35", color: "white", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 7 }}
->
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
-    <circle cx="4" cy="4" r="2" fill="white"/>
-  </svg>
-  Login with LinkedIn
-</a>
+  <a href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=86nqmaogrsbobc&redirect_uri=${encodeURIComponent('https://ratemyguru.in/auth/linkedin/callback')}&scope=openid%20profile%20email&state=xyz123`}
+    style={{ padding: "9px 18px", fontSize: 13, background: "#FF6B35", color: "white", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 7 }}>
+    Login with LinkedIn
+  </a>
+)}
 )}
         </div>
       </nav>
