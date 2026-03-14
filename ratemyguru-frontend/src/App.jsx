@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { loginWithLinkedIn, getUser, logout } from './utils/auth';
 
 const CATEGORIES = ["All", "Data Engineering", "DSA & Algorithms", "Web Development", "Machine Learning", "System Design", "DevOps", "UI/UX Design", "Digital Marketing", "Python", "Java"];
 const COUNTRIES = ["All Countries", "India", "USA", "UK", "Canada", "Australia"];
@@ -630,10 +631,16 @@ export default function RateMyGuru() {
           <button className="btn-outline" onClick={() => setShowAddCreator(true)} style={{ padding: "9px 18px", fontSize: 13 }}>
             + Add Creator
           </button>
-          <button className="btn-primary" style={{ padding: "9px 18px", fontSize: 13, display: "flex", alignItems: "center", gap: 7 }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>
-            Login
-          </button>
+         {getUser() ? (
+  <button className="btn-outline" onClick={logout} style={{ padding: "9px 18px", fontSize: 13 }}>
+    👋 {getUser().name.split(" ")[0]}  · Logout
+  </button>
+) : (
+  <button className="btn-primary" onClick={loginWithLinkedIn} style={{ padding: "9px 18px", fontSize: 13, display: "flex", alignItems: "center", gap: 7 }}>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>
+    Login with LinkedIn
+  </button>
+)}
         </div>
       </nav>
 
