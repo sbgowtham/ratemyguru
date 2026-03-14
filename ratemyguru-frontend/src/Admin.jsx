@@ -476,10 +476,10 @@ function StatsTab({ stats }) {
         <div style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 17, marginBottom: 18 }}>System Health</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {[
-            { label: "Backend API", status: "online", url: "localhost:3001" },
+            { label: "Backend API", status: "online", url: "ratemyguru-production.up.railway.app" },
+            { label: "Frontend", status: "online", url: "ratemyguru.in" },
             { label: "Supabase DB", status: "online", url: "supabase.com" },
             { label: "LinkedIn OAuth", status: "online", url: "linkedin.com/developers" },
-            { label: "Frontend", status: "online", url: "localhost:3000" },
           ].map(s => (
             <div key={s.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", background: "var(--surface2)", borderRadius: 10 }}>
               <div>

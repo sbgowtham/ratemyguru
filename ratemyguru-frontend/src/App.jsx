@@ -648,11 +648,18 @@ export default function RateMyGuru() {
   const [sort, setSort] = useState("rating");
   const [loaded, setLoaded] = useState(false);
   const [user, setUser] = useState(getUser());
+  const [creators, setCreators] = useState([]);
   const handleLogout = () => { logout(); setUser(null); };
 
-  useEffect(() => { setTimeout(() => setLoaded(true), 100); }, []);
+  useEffect(() => {
+  setTimeout(() => setLoaded(true), 100);
+  fetch("https://ratemyguru-production.up.railway.app/api/creators")
+    .then(r => r.json())
+    .then(data => { if (data.creators) setCreators(data.creators); })
+    .catch(() => setCreators(MOCK_CREATORS));
+}, []);
 
-  const filtered = MOCK_CREATORS.filter(c => {
+  const filtered = (creators.length > 0 ? creators : MOCK_CREATORS).filter(c => {
     const matchCat = selectedCategory === "All" || c.category === selectedCategory;
     const matchCountry = selectedCountry === "All Countries" || c.country === selectedCountry;
     const matchState = selectedState === "All States" || c.state === selectedState;
