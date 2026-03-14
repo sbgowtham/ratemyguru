@@ -482,10 +482,31 @@ function AddCreatorModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [checking, setChecking] = useState(false);
 
-  const handleSubmit = () => {
-    setChecking(true);
-    setTimeout(() => { setChecking(false); setSubmitted(true); }, 1500);
-  };
+  const handleSubmit = async () => {
+  setChecking(true);
+  try {
+    const token = localStorage.getItem("rmg_token");
+    const res = await fetch("https://ratemyguru-production.up.railway.app/api/creators", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(form),
+    });
+    const data = await res.json();
+    if (res.status === 409) {
+      alert(`Duplicate! ${data.duplicate.name} already exists.`);
+      setChecking(false);
+      return;
+    }
+    setChecking(false);
+    setSubmitted(true);
+  } catch (err) {
+    alert("Something went wrong. Try again.");
+    setChecking(false);
+  }
+};
 
   return (
     <div className="modal-overlay" onClick={onClose}>
