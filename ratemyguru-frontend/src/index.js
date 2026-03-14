@@ -20,17 +20,17 @@ function LinkedInCallback() {
         if (data.user) {
           localStorage.setItem("rmg_user", JSON.stringify(data.user));
           localStorage.setItem("rmg_token", data.token);
-          setTimeout(() => window.location.href = "/", 5000);
+          window.location.href = "/";
         } else {
           console.error("No user in response:", data);
           // TEMPORARY - save mock user so you can see logout button
           localStorage.setItem("rmg_user", JSON.stringify({ name: "Gowtham SB", email: "test@test.com" }));
-          setTimeout(() => window.location.href = "/", 5000);
+          window.location.href = "/";
         }
       })
       .catch(err => {
         console.error("Fetch error:", err);
-        setTimeout(() => window.location.href = "/", 5000);
+        window.location.href = "/";
       });
     }
   }, []);
