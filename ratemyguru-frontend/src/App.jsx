@@ -200,7 +200,7 @@ const styles = `
   ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 10px; }
 `;
 
-function Logo({ size = "md" }) {
+function Logo({ size = "md", light = false }) {
   const s = size === "lg" ? 40 : size === "sm" ? 28 : 34;
   const fs = size === "lg" ? 26 : size === "sm" ? 18 : 22;
   return (
@@ -217,7 +217,7 @@ function Logo({ size = "md" }) {
         </svg>
       </div>
       <div>
-        <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: fs, color: "#0F1729", lineHeight: 1 }}>
+        <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: fs, color: light ? "#FFFFFF" : "#0F1729", lineHeight: 1 }}>
           RateMyGuru
         </div>
         {size !== "sm" && <div style={{ fontSize: 9, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", letterSpacing: 1, fontWeight: 600 }}>RATEMYGURU.IN</div>}
@@ -642,6 +642,7 @@ export default function RateMyGuru() {
     style={{ padding: "9px 18px", fontSize: 13, background: "#FF6B35", color: "white", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 7 }}>
     Login with LinkedIn
   </a>
+  </a>
 )}
         </div>
       </nav>
@@ -744,7 +745,7 @@ export default function RateMyGuru() {
       {/* Footer */}
       <footer style={{ background: "#0F1729", padding: "32px 28px", marginTop: 40 }}>
         <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
-          <Logo size="sm" />
+          <Logo size="sm" light={true} />
           <div style={{ fontSize: 13, color: "#475569", fontFamily: "'DM Sans', sans-serif", textAlign: "center" }}>
             Honest reviews. Verified learners. Zero fake gurus. 🎯
           </div>
