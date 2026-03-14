@@ -11,9 +11,12 @@ const REDIRECT_URI = `${window.location.origin}/auth/linkedin/callback`;
 // LinkedIn OAuth — redirect user to LinkedIn
 // ============================================
 export function loginWithLinkedIn() {
-  const state = Math.random().toString(36).substring(2); // CSRF protection
-  localStorage.setItem("linkedin_oauth_state", state);
+  console.log("Login clicked!");
+  console.log("Client ID:", LINKEDIN_CLIENT_ID);
+  console.log("Redirect URI:", REDIRECT_URI);
 
+  const state = Math.random().toString(36).substring(2);
+  localStorage.setItem("linkedin_oauth_state", state);
   const params = new URLSearchParams({
     response_type: "code",
     client_id: LINKEDIN_CLIENT_ID,
@@ -22,6 +25,7 @@ export function loginWithLinkedIn() {
     scope: "openid profile email",
   });
 
+  console.log("Redirecting to:", `https://www.linkedin.com/oauth/v2/authorization?${params}`);
   window.location.href = `https://www.linkedin.com/oauth/v2/authorization?${params}`;
 }
 
