@@ -218,8 +218,8 @@ function Logo({ size = "md", light = false }) {
       </div>
       <div>
         <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: fs, color: light ? "#FFFFFF" : "#0F1729", lineHeight: 1 }}>
-          RateMyGuru
-        </div>
+		RateMyGuru
+		</div>
         {size !== "sm" && <div style={{ fontSize: 9, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", letterSpacing: 1, fontWeight: 600 }}>RATEMYGURU.IN</div>}
       </div>
     </div>
@@ -765,16 +765,16 @@ export default function RateMyGuru() {
 
       {/* Footer */}
       <footer style={{ background: "#0F1729", padding: "32px 28px", marginTop: 40 }}>
-        <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
-          <Logo size="sm" light={true} />
-          <div style={{ fontSize: 13, color: "#475569", fontFamily: "'DM Sans', sans-serif", textAlign: "center" }}>
-            Honest reviews. Verified learners. Zero fake gurus. 🎯
-          </div>
-          <div style={{ fontSize: 12, color: "#2A3F6B", fontFamily: "'DM Sans', sans-serif" }}>
-            © 2026 RateMyGuru.in · 100% Free Forever
-          </div>
-        </div>
-      </footer>
+  <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
+    <Logo size="sm" light={true} />
+    <div style={{ fontSize: 13, color: "#475569", fontFamily: "'DM Sans', sans-serif", textAlign: "center" }}>
+      Honest reviews. Verified learners. Zero fake gurus. 🎯
+    </div>
+    <div style={{ fontSize: 12, color: "#2A3F6B", fontFamily: "'DM Sans', sans-serif" }}>
+      © 2026 RateMyGuru.in · 100% Free Forever
+    </div>
+  </div>
+</footer>
 
       {selectedCreator && <ReviewModal creator={selectedCreator} onClose={() => setSelectedCreator(null)} />}
       {showAddCreator && <AddCreatorModal onClose={() => setShowAddCreator(false)} />}
