@@ -44,19 +44,17 @@ async function requireAuth(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Login required" });
 
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return res.status(401).json({ error: "Invalid session" });
-
-  // Fetch user profile
-  const { data: profile } = await supabase
+  // Look up user directly by their ID stored as token
+  const { data: profile, error } = await supabase
     .from("users")
     .select("*")
-    .eq("id", user.id)
+    .eq("id", token)
     .single();
 
-  if (profile?.is_banned) return res.status(403).json({ error: "Account suspended" });
+  if (error || !profile) return res.status(401).json({ error: "Invalid session" });
+  if (profile.is_banned) return res.status(403).json({ error: "Account suspended" });
 
-  req.user = profile || user;
+  req.user = profile;
   next();
 }
 
@@ -566,7 +564,7 @@ app.post("/api/auth/linkedin", async (req, res) => {
         headline: user.headline,
         connections_count: user.connections_count,
       },
-      token: sessionData?.properties?.hashed_token,
+      token: user.id,  // use user ID as token
     });
 
   } catch (err) {

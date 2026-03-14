@@ -483,9 +483,17 @@ function AddCreatorModal({ onClose }) {
   const [checking, setChecking] = useState(false);
 
   const handleSubmit = async () => {
+  const token = localStorage.getItem("rmg_token");
+  
+  // Check if logged in
+  if (!token) {
+    alert("Please login with LinkedIn first before adding a creator!");
+    onClose();
+    return;
+  }
+
   setChecking(true);
   try {
-    const token = localStorage.getItem("rmg_token");
     const res = await fetch("https://ratemyguru-production.up.railway.app/api/creators", {
       method: "POST",
       headers: {
@@ -497,6 +505,11 @@ function AddCreatorModal({ onClose }) {
     const data = await res.json();
     if (res.status === 409) {
       alert(`Duplicate! ${data.duplicate.name} already exists.`);
+      setChecking(false);
+      return;
+    }
+    if (res.status === 401) {
+      alert("Session expired. Please login again.");
       setChecking(false);
       return;
     }

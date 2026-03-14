@@ -19,7 +19,7 @@ function LinkedInCallback() {
         console.log("Backend response:", data); // ADD THIS
         if (data.user) {
           localStorage.setItem("rmg_user", JSON.stringify(data.user));
-          localStorage.setItem("rmg_token", data.token);
+          localStorage.setItem("rmg_token", data.user.id);
           window.location.href = "/";
         } else {
           console.error("No user in response:", data);
