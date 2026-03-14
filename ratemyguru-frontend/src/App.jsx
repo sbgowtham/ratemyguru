@@ -226,7 +226,7 @@ function Logo({ size = "md", light = false }) {
   );
 }
 
-function StarRating({ rating, size = "sm" }) {
+function StarRating({ rating = 0, size = "sm" }) {
   const sz = size === "lg" ? 20 : 13;
   return (
     <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
@@ -306,11 +306,11 @@ function CreatorCard({ creator, onClick }) {
       </div>
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 14, borderTop: "1px solid #F1F3F9" }}>
-        <StarRating rating={creator.rating} />
+        <StarRating rating={creator.rating || creator.avg_rating || 0} />
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
           <span style={{ fontSize: 12, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>
-            {creator.reviewCount.toLocaleString()} reviews
+            {(creator.reviewCount || creator.review_count || 0).toLocaleString()} reviews
           </span>
         </div>
       </div>
