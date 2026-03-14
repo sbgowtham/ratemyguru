@@ -482,15 +482,16 @@ function AddCreatorModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [checking, setChecking] = useState(false);
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
   const token = localStorage.getItem("rmg_token");
-  
-  // Check if logged in
   if (!token) {
-    alert("Please login with LinkedIn first before adding a creator!");
+    alert("Please login with LinkedIn first!");
     onClose();
     return;
   }
+
+  console.log("Form data:", form); // ADD THIS
+  console.log("Token:", token); // ADD THIS
 
   setChecking(true);
   try {
@@ -502,14 +503,17 @@ function AddCreatorModal({ onClose }) {
       },
       body: JSON.stringify(form),
     });
+    
     const data = await res.json();
+    console.log("Response:", data); // ADD THIS
+    
     if (res.status === 409) {
       alert(`Duplicate! ${data.duplicate.name} already exists.`);
       setChecking(false);
       return;
     }
-    if (res.status === 401) {
-      alert("Session expired. Please login again.");
+    if (res.status === 400) {
+      alert(`Validation error: ${data.error}`);
       setChecking(false);
       return;
     }
