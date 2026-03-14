@@ -643,7 +643,6 @@ export default function RateMyGuru() {
     Login with LinkedIn
   </a>
 )}
-)}
         </div>
       </nav>
 
