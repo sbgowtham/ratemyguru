@@ -663,7 +663,6 @@ export default function RateMyGuru() {
     style={{ padding: "9px 18px", fontSize: 13, background: "#FF6B35", color: "white", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 7 }}>
     Login with LinkedIn
   </a>
-  </a>
 )}
         </div>
       </nav>
