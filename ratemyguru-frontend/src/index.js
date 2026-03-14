@@ -16,15 +16,22 @@ function LinkedInCallback() {
       })
       .then(r => r.json())
       .then(data => {
+        console.log("Backend response:", data); // ADD THIS
         if (data.user) {
           localStorage.setItem("rmg_user", JSON.stringify(data.user));
           localStorage.setItem("rmg_token", data.token);
+          window.location.href = "/";
+        } else {
+          console.error("No user in response:", data);
+          // TEMPORARY - save mock user so you can see logout button
+          localStorage.setItem("rmg_user", JSON.stringify({ name: "Gowtham SB", email: "test@test.com" }));
+          window.location.href = "/";
         }
-        window.location.href = "/";
       })
-      .catch(() => window.location.href = "/");
-    } else {
-      window.location.href = "/";
+      .catch(err => {
+        console.error("Fetch error:", err);
+        window.location.href = "/";
+      });
     }
   }, []);
 
