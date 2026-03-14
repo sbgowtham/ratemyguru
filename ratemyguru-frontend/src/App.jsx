@@ -9,7 +9,7 @@ const LINKEDIN_CLIENT_ID = "86nqmaogrsbobc";
 
 function loginWithLinkedIn() {
   const redirectUri = encodeURIComponent(window.location.origin + "/auth/linkedin/callback");
-  window.location.href = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${redirectUri}&scope=openid%20profile%20email&state=xyz123`;
+  window.open(`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${redirectUri}&scope=openid%20profile%20email&state=xyz123`, "_self");
 }
 
 const MOCK_CREATORS = [
