@@ -20,7 +20,16 @@ const supabase = createClient(
 // ============================================
 // MIDDLEWARE
 // ============================================
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000" }));
+app.use(cors({ 
+  origin: [
+    "http://localhost:3000",
+    "https://ratemyguru.in",
+    "https://www.ratemyguru.in",
+    "https://ratemyguru-frontend.vercel.app",
+    "https://ratemyguru.vercel.app"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // Rate limiting — prevents spam
