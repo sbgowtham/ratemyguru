@@ -5,12 +5,12 @@
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 const LINKEDIN_CLIENT_ID = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
-const REDIRECT_URI = `${window.location.origin}/auth/linkedin/callback`;
 
 // ============================================
 // LinkedIn OAuth — redirect user to LinkedIn
 // ============================================
 export function loginWithLinkedIn() {
+  const REDIRECT_URI = `${window.location.origin}/auth/linkedin/callback`;	
   console.log("Login clicked!");
   console.log("Client ID:", LINKEDIN_CLIENT_ID);
   console.log("Redirect URI:", REDIRECT_URI);
