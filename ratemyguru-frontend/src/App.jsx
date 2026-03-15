@@ -715,14 +715,21 @@ export default function RateMyGuru() {
   const [loaded, setLoaded] = useState(false);
   const [user, setUser] = useState(getUser());
   const [creators, setCreators] = useState([]);
+  const [creatorsLoading, setCreatorsLoading] = useState(true);
   const handleLogout = () => { logout(); setUser(null); };
 
   useEffect(() => {
   setTimeout(() => setLoaded(true), 100);
   fetch("https://ratemyguru-production.up.railway.app/api/creators")
     .then(r => r.json())
-    .then(data => { if (data.creators) setCreators(data.creators); })
-    .catch(() => setCreators(MOCK_CREATORS));
+    .then(data => {
+      setCreators(data.creators || []);
+      setCreatorsLoading(false);
+    })
+    .catch(() => {
+      setCreators([]);
+      setCreatorsLoading(false);
+    });
 }, []);
 
   const filtered = (creators.length > 0 ? creators : MOCK_CREATORS).filter(c => {
@@ -834,7 +841,12 @@ export default function RateMyGuru() {
           </select>
         </div>
 
-        {filtered.length === 0 ? (
+        {creatorsLoading ? (
+  <div style={{ textAlign: "center", padding: "80px 20px" }}>
+    <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
+    <div style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 800, color: "#0F1729" }}>Loading Gurus...</div>
+  </div>
+) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 20px" }}>
             <div style={{ fontSize: 56, marginBottom: 16 }}>🔍</div>
             <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 800, color: "#0F1729", marginBottom: 8 }}>No Gurus Found</div>
