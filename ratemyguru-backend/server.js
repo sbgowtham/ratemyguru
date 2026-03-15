@@ -290,16 +290,17 @@ app.post("/api/creators/:id/reviews", requireAuth, strictLimiter, async (req, re
     if (!creator) return res.status(404).json({ error: "Creator not found" });
 
     // Velocity check — same user reviewing too fast
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-    const { count: recentReviews } = await supabase
-      .from("reviews")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", req.user.id)
-      .gte("created_at", oneHourAgo);
+   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+const { count: recentReviews } = await supabase
+  .from("reviews")
+  .select("id", { count: "exact", head: true })
+  .eq("user_id", req.user.id)
+  .gte("created_at", oneHourAgo);
 
-    if (recentReviews >= 3) {
-      return res.status(429).json({ error: "You're reviewing too fast. Please wait before submitting more reviews." });
-    }
+if ((recentReviews || 0) >= 3) {
+  return res.status(429).json({ error: "You're reviewing too fast. Please wait before submitting more reviews." });
+}
+const autoStatus = "pending";
 
     // New account check (account < 24hrs old = hold for manual review)
     const accountAge = (Date.now() - new Date(req.user.created_at)) / (1000 * 60 * 60);
@@ -313,7 +314,7 @@ app.post("/api/creators/:id/reviews", requireAuth, strictLimiter, async (req, re
         rating,
         text: text.trim(),
         status: autoStatus,
-        is_verified_learner: req.user.connections_count > 200,
+        is_verified_learner: (req.user.connections_count || 0) > 200,
       })
       .select()
       .single();
