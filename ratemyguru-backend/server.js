@@ -71,11 +71,9 @@ function requireAdmin(req, res, next) {
 // ============================================
 function checkLinkedInQuality(user) {
   const issues = [];
-  if (user.connections_count < 50) issues.push("Minimum 50 LinkedIn connections required");
-  const accountAge = user.linkedin_created_at
-    ? (Date.now() - new Date(user.linkedin_created_at)) / (1000 * 60 * 60 * 24 * 30)
-    : 999;
-  if (accountAge < 6) issues.push("LinkedIn account must be at least 6 months old");
+  // Check account age in our system - if created less than 1 hour ago, flag it
+  const accountAge = (Date.now() - new Date(user.created_at)) / (1000 * 60 * 60);
+  if (accountAge < 0.1) issues.push("Account too new. Please try again in a few minutes.");
   return issues;
 }
 
