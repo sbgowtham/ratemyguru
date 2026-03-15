@@ -328,7 +328,7 @@ function CreatorCard({ creator, onClick }) {
             </span>
           </div>
         </div>
-        
+        <a
           href={creator.platform === "YouTube"
             ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
             : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
