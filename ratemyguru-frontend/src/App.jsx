@@ -330,30 +330,37 @@ function ReviewModal({ creator, onClose }) {
     ...creator,
     rating: creator.rating || creator.avg_rating || 0,
     reviewCount: creator.reviewCount || creator.review_count || 0,
+    color: creator.color || creator.avatar_color || "#FF6B35",
+    avatar: creator.avatar_letter || creator.avatar || creator.name?.[0] || "?",
   };
-
-  useEffect(() => {
-  fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews`)
-    .then(r => r.json())
-    .then(data => {
-      setReviews(data.reviews || []);
-      setReviewsLoading(false);
-    })
-    .catch(() => setReviewsLoading(false));
-}, [c.id]);
 
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState("reviews");
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+
+  useEffect(() => {
+    if (c.id) {
+      fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews`)
+        .then(r => r.json())
+        .then(data => {
+          setReviews(data.reviews || []);
+          setReviewsLoading(false);
+        })
+        .catch(() => setReviewsLoading(false));
+    } else {
+      setReviewsLoading(false);
+    }
+  }, [c.id]);
 
   if (!creator) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={e => e.stopPropagation()}>
-        {/* Modal header */}
         <div style={{ padding: "24px 24px 0" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
             <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
@@ -363,7 +370,7 @@ function ReviewModal({ creator, onClose }) {
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 22, fontWeight: 800, color: c.color,
                 fontFamily: "'Fraunces', serif",
-              }}>{c.avatar_letter || c.avatar || c.name?.[0]}</div>
+              }}>{c.avatar}</div>
               <div>
                 <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 18, color: "#0F1729", marginBottom: 2 }}>{c.name}</div>
                 <div style={{ fontSize: 12, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{c.category} · {c.country}</div>
@@ -373,7 +380,6 @@ function ReviewModal({ creator, onClose }) {
             <button onClick={onClose} style={{ background: "#F1F3F9", border: "none", cursor: "pointer", width: 32, height: 32, borderRadius: 8, fontSize: 16, color: "#94A3B8", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
           </div>
 
-          {/* Rating breakdown */}
           <div style={{ background: "#FFFBF9", border: "1.5px solid #FFD4C2", borderRadius: 14, padding: "16px 20px", marginBottom: 20, display: "flex", gap: 24, alignItems: "center" }}>
             <div style={{ textAlign: "center", minWidth: 70 }}>
               <div style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 800, color: "#0F1729", lineHeight: 1 }}>{c.rating}</div>
@@ -392,7 +398,6 @@ function ReviewModal({ creator, onClose }) {
             </div>
           </div>
 
-          {/* Tabs */}
           <div style={{ display: "flex", borderBottom: "2px solid #F1F3F9" }}>
             {[["reviews", `Reviews (${c.reviewCount.toLocaleString()})`], ["write", "Write a Review"]].map(([tab, label]) => (
               <button key={tab} onClick={() => setActiveTab(tab)} style={{
@@ -407,44 +412,45 @@ function ReviewModal({ creator, onClose }) {
           </div>
         </div>
 
-        {/* Tab content */}
         <div style={{ padding: "20px 24px 28px" }}>
           {activeTab === "reviews" ? (
-  <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-    {reviewsLoading ? (
-      <div style={{ textAlign: "center", padding: 40, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Loading reviews...</div>
-    ) : reviews.length === 0 ? (
-      <div style={{ textAlign: "center", padding: 40 }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
-        <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: 18, color: "#0F1729", marginBottom: 6 }}>No reviews yet</div>
-        <div style={{ fontSize: 13, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Be the first to review this creator!</div>
-      </div>
-    ) : reviews.map((r, i) => (
-      <div key={i} style={{ paddingBottom: 18, borderBottom: i < reviews.length - 1 ? "1px solid #F1F3F9" : "none" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: "#F1F3F9", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 14, color: "#0F1729" }}>
-              {r.users?.name?.[0] || "U"}
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              {reviewsLoading ? (
+                <div style={{ textAlign: "center", padding: 40, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>
+                  Loading reviews...
+                </div>
+              ) : reviews.length === 0 ? (
+                <div style={{ textAlign: "center", padding: 40 }}>
+                  <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
+                  <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: 18, color: "#0F1729", marginBottom: 6 }}>No reviews yet</div>
+                  <div style={{ fontSize: 13, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Be the first to review this creator!</div>
+                </div>
+              ) : reviews.map((r, i) => (
+                <div key={i} style={{ paddingBottom: 18, borderBottom: i < reviews.length - 1 ? "1px solid #F1F3F9" : "none" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ width: 34, height: 34, borderRadius: 10, background: "#F1F3F9", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 14, color: "#0F1729" }}>
+                        {r.users?.name?.[0] || "U"}
+                      </div>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ fontWeight: 700, fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#0F1729" }}>{r.users?.name || "User"}</span>
+                          {r.is_verified_learner && <span style={{ fontSize: 10, background: "#D1FAE5", color: "#065F46", padding: "1px 7px", borderRadius: 20, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}>✓ Verified</span>}
+                        </div>
+                        <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{r.users?.headline || ""}</div>
+                      </div>
+                    </div>
+                    <span style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{new Date(r.created_at).toLocaleDateString()}</span>
+                  </div>
+                  <StarRating rating={r.rating} />
+                  <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7, margin: "10px 0", fontFamily: "'DM Sans', sans-serif" }}>{r.text}</p>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button style={{ background: "none", border: "1.5px solid #E2E8F0", borderRadius: 20, padding: "4px 14px", fontSize: 12, cursor: "pointer", color: "#475569", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>👍 {r.upvotes || 0}</button>
+                    <button style={{ background: "none", border: "none", fontSize: 12, cursor: "pointer", color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Flag</button>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ fontWeight: 700, fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#0F1729" }}>{r.users?.name || "User"}</span>
-                {r.is_verified_learner && <span style={{ fontSize: 10, background: "#D1FAE5", color: "#065F46", padding: "1px 7px", borderRadius: 20, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}>✓ Verified</span>}
-              </div>
-              <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{r.users?.headline || ""}</div>
-            </div>
-          </div>
-          <span style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{new Date(r.created_at).toLocaleDateString()}</span>
-        </div>
-        <StarRating rating={r.rating} />
-        <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7, margin: "10px 0", fontFamily: "'DM Sans', sans-serif" }}>{r.text}</p>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button style={{ background: "none", border: "1.5px solid #E2E8F0", borderRadius: 20, padding: "4px 14px", fontSize: 12, cursor: "pointer", color: "#475569", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>👍 {r.upvotes || 0}</button>
-          <button style={{ background: "none", border: "none", fontSize: 12, cursor: "pointer", color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Flag</button>
-        </div>
-      </div>
-    ))}
-  </div>
           ) : submitted ? (
             <div style={{ textAlign: "center", padding: "48px 20px" }}>
               <div style={{ fontSize: 56, marginBottom: 14 }}>🎉</div>
@@ -489,32 +495,32 @@ function ReviewModal({ creator, onClose }) {
                 <span>Login with LinkedIn required. Your professional profile (name + role) will be shown with your review — this keeps reviews honest and trusted.</span>
               </div>
               <button className="btn-primary"
-  onClick={async () => {
-    if (review.length < 50 || rating === 0) return;
-    const token = localStorage.getItem("rmg_token");
-    if (!token) {
-      alert("Please login with LinkedIn first!");
-      return;
-    }
-    try {
-      const res = await fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ rating, text: review }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setSubmitted(true);
-      } else {
-        alert(data.error || "Something went wrong!");
-      }
-    } catch (err) {
-      alert("Something went wrong. Try again.");
-    }
-  }}
+                onClick={async () => {
+                  if (review.length < 50 || rating === 0) return;
+                  const token = localStorage.getItem("rmg_token");
+                  if (!token) {
+                    alert("Please login with LinkedIn first!");
+                    return;
+                  }
+                  try {
+                    const res = await fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                      },
+                      body: JSON.stringify({ rating, text: review }),
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                      setSubmitted(true);
+                    } else {
+                      alert(data.error || "Something went wrong!");
+                    }
+                  } catch (err) {
+                    alert("Something went wrong. Try again.");
+                  }
+                }}
                 style={{ width: "100%", padding: 14, fontSize: 15, opacity: review.length >= 50 && rating > 0 ? 1 : 0.5, cursor: review.length >= 50 && rating > 0 ? "pointer" : "not-allowed" }}>
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>
