@@ -7,6 +7,7 @@ import rateLimit from "express-rate-limit";
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3001;
 
 // ============================================
@@ -610,12 +611,26 @@ app.get("/api/sync/creator/:id", requireAdmin, async (req, res) => {
 // DELETE /api/admin/creators/:id/delete
 app.put("/api/admin/creators/:id/delete", requireAdmin, async (req, res) => {
   try {
-    await supabase.from("reviews").delete().eq("creator_id", req.params.id);
-    const { error } = await supabase.from("creators").delete().eq("id", req.params.id);
+    const creatorId = req.params.id;
+
+    const { data: reviewIds } = await supabase
+      .from("reviews").select("id").eq("creator_id", creatorId);
+    const ids = (reviewIds || []).map(r => r.id);
+
+    if (ids.length > 0) {
+      await supabase.from("review_flags").delete().in("review_id", ids);
+      await supabase.from("review_votes").delete().in("review_id", ids);
+    }
+
+    await supabase.from("reviews").delete().eq("creator_id", creatorId);
+    await supabase.from("creator_submissions").delete().eq("creator_id", creatorId);
+
+    const { error } = await supabase.from("creators").delete().eq("id", creatorId);
     if (error) throw error;
+
     res.json({ message: "Creator deleted permanently" });
   } catch (err) {
-    console.error("Delete error:", err);
+    console.error("Delete error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
