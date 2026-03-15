@@ -345,9 +345,7 @@ function CreatorCard({ creator, onClick }) {
     ) : (
       <>◈ Visit Instagram Profile</>
     )}
-  </a>
-</div>
-</div> 
+  </a> 
     </div>
   );
 }
