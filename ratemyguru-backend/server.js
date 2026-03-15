@@ -584,7 +584,26 @@ const { data: user, error: userError } = await supabase
     res.status(500).json({ error: err.message });
   }
 });
+// In server.js - add this route
+app.get("/api/sync/creator/:id", requireAdmin, async (req, res) => {
+  const { data: creator } = await supabase
+    .from("creators")
+    .select("youtube_id")
+    .eq("id", req.params.id)
+    .single();
 
+  const ytRes = await fetch(
+    `https://www.googleapis.com/youtube/v3/channels?part=statistics&forUsername=${creator.youtube_id}&key=${process.env.YOUTUBE_API_KEY}`
+  );
+  const ytData = await ytRes.json();
+  const subscribers = ytData.items?.[0]?.statistics?.subscriberCount;
+
+  await supabase.from("creators").update({ 
+    subscribers: formatCount(subscribers)
+  }).eq("id", req.params.id);
+
+  res.json({ subscribers });
+});
 // ============================================
 // START
 // ============================================
