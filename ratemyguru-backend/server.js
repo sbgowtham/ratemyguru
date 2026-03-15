@@ -138,7 +138,9 @@ app.get("/api/creators/:id", async (req, res) => {
 // POST /api/creators — submit new creator (requires auth)
 app.post("/api/creators", requireAuth, strictLimiter, async (req, res) => {
   try {
-    const { name, platform, youtube_id, instagram_id, category, country, state, bio, subscribers, tags } = req.body;
+    const { name, platform, category, country, state, bio, subscribers, tags } = req.body;
+const youtube_id = req.body.youtube_id || null;
+const instagram_id = req.body.instagram_id || null;
 
     // Validation
     if (!name || !platform || !category || !country || !bio) {
@@ -604,6 +606,22 @@ app.get("/api/sync/creator/:id", requireAdmin, async (req, res) => {
 
   res.json({ subscribers });
 });
+
+// DELETE /api/admin/creators/:id
+app.delete("/api/admin/creators/:id", requireAdmin, async (req, res) => {
+  try {
+    const { error } = await supabase
+      .from("creators")
+      .delete()
+      .eq("id", req.params.id);
+
+    if (error) throw error;
+    res.json({ message: "Creator deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ============================================
 // START
 // ============================================
