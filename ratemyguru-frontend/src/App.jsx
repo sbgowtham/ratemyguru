@@ -347,6 +347,7 @@ function CreatorCard({ creator, onClick }) {
     )}
   </a>
 </div>
+
     </div>
   );
 }
