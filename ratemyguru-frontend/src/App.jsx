@@ -469,7 +469,32 @@ function ReviewModal({ creator, onClose }) {
                 <span>Login with LinkedIn required. Your professional profile (name + role) will be shown with your review — this keeps reviews honest and trusted.</span>
               </div>
               <button className="btn-primary"
-                onClick={() => review.length >= 50 && rating > 0 && setSubmitted(true)}
+  onClick={async () => {
+    if (review.length < 50 || rating === 0) return;
+    const token = localStorage.getItem("rmg_token");
+    if (!token) {
+      alert("Please login with LinkedIn first!");
+      return;
+    }
+    try {
+      const res = await fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ rating, text: review }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        alert(data.error || "Something went wrong!");
+      }
+    } catch (err) {
+      alert("Something went wrong. Try again.");
+    }
+  }}
                 style={{ width: "100%", padding: 14, fontSize: 15, opacity: review.length >= 50 && rating > 0 ? 1 : 0.5, cursor: review.length >= 50 && rating > 0 ? "pointer" : "not-allowed" }}>
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>
