@@ -264,88 +264,87 @@ function CreatorCard({ creator, onClick }) {
       background: "white", border: "1.5px solid #E2E8F0",
       borderRadius: 16, padding: 20, position: "relative", overflow: "hidden",
     }}>
-      {/* Top accent line */}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${creator.color}, ${creator.color}88)` }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${creator.color || "#FF6B35"}, ${(creator.color || "#FF6B35")}88)` }} />
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
         <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
           <div style={{
             width: 50, height: 50, borderRadius: 14, flexShrink: 0,
-            background: creator.color + "18",
-            border: `2px solid ${creator.color}30`,
+            background: (creator.color || "#FF6B35") + "18",
+            border: `2px solid ${(creator.color || "#FF6B35")}30`,
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 20, fontWeight: 800, color: creator.color,
-            fontFamily: "'Fraunces', serif",
-          }}>{creator.avatar}</div>
+            fontSize: 20, fontWeight: 800, color: creator.color || "#FF6B35",
+            fontFamily: "'Fraunces', serif", overflow: "hidden",
+          }}>
+            {creator.profile_picture
+              ? <img src={creator.profile_picture} alt={creator.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              : (creator.avatar_letter || creator.avatar || creator.name?.[0] || "?")}
+          </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
               <span style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 15, color: "#0F1729" }}>{creator.name}</span>
               {creator.verified && (
                 <div title="Verified" style={{ width: 16, height: 16, background: "#0EA5E9", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
-                    <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  <svg width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </div>
               )}
             </div>
             <a href={creator.platform === "YouTube"
-    ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
-    : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
-  target="_blank" rel="noopener noreferrer"
-  onClick={e => e.stopPropagation()}
-  style={{ fontSize: 14, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
-  {creator.handle || (creator.youtube_id ? `@${creator.youtube_id}` : `@${creator.instagram_id}`)}
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round">
-    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-    <polyline points="15 3 21 3 21 9"/>
-    <line x1="10" y1="14" x2="21" y2="3"/>
-  </svg>
-</a>
-<div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2, fontFamily: "'DM Sans', sans-serif" }}>
-  📍 {creator.state !== "All States" ? `${creator.state}, ` : ""}{creator.country} · {creator.subscribers}
-</div>
+                ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
+                : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
+              target="_blank" rel="noopener noreferrer"
+              onClick={e => e.stopPropagation()}
+              style={{ fontSize: 13, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 3, marginBottom: 2 }}>
+              {creator.handle || (creator.youtube_id ? `@${creator.youtube_id}` : `@${creator.instagram_id}`)}
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+            <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>
+              📍 {creator.state !== "All States" ? `${creator.state}, ` : ""}{creator.country} · {creator.subscribers}
+            </div>
+          </div>
+        </div>
+        <PlatformBadge platform={creator.platform} />
+      </div>
 
       <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, marginBottom: 14, fontFamily: "'DM Sans', sans-serif" }}>
         {creator.bio}
       </p>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
-        {creator.tags.map(t => <span key={t} className="tag">{t}</span>)}
+        {creator.tags?.map(t => <span key={t} className="tag">{t}</span>)}
       </div>
 
       <div style={{ paddingTop: 14, borderTop: "1px solid #F1F3F9" }}>
-  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-    <StarRating rating={creator.rating || creator.avg_rating || 0} />
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
-      <span style={{ fontSize: 12, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>
-        {(creator.reviewCount || creator.review_count || 0).toLocaleString()} reviews
-      </span>
-    </div>
-  </div>
-  
-    href={creator.platform === "YouTube"
-      ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
-      : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
-    target="_blank" rel="noopener noreferrer"
-    onClick={e => e.stopPropagation()}
-    style={{
-      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-      background: creator.platform === "YouTube" ? "#FEE2E2" : "#FCE7F3",
-      color: creator.platform === "YouTube" ? "#DC2626" : "#BE185D",
-      padding: "9px 0", borderRadius: 10, width: "100%",
-      fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
-      textDecoration: "none", transition: "all 0.15s",
-    }}
-    onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
-    onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-  >
-    {creator.platform === "YouTube" ? (
-      <>▶ Visit YouTube Channel</>
-    ) : (
-      <>◈ Visit Instagram Profile</>
-    )}
-  </a> 
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <StarRating rating={creator.rating || creator.avg_rating || 0} />
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
+            <span style={{ fontSize: 12, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>
+              {(creator.reviewCount || creator.review_count || 0).toLocaleString()} reviews
+            </span>
+          </div>
+        </div>
+        
+          href={creator.platform === "YouTube"
+            ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
+            : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
+          target="_blank" rel="noopener noreferrer"
+          onClick={e => e.stopPropagation()}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            background: creator.platform === "YouTube" ? "#FEE2E2" : "#FCE7F3",
+            color: creator.platform === "YouTube" ? "#DC2626" : "#BE185D",
+            padding: "10px 0", borderRadius: 10, width: "100%",
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
+            textDecoration: "none",
+          }}>
+          {creator.platform === "YouTube" ? "▶ Visit YouTube Channel" : "◈ Visit Instagram Profile"}
+        </a>
+      </div>
     </div>
   );
 }
