@@ -329,21 +329,35 @@ function CreatorCard({ creator, onClick }) {
           </div>
         </div>
         <a
-          href={creator.platform === "YouTube"
-            ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
-            : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
-          target="_blank" rel="noopener noreferrer"
-          onClick={e => e.stopPropagation()}
-          style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-            background: creator.platform === "YouTube" ? "#FEE2E2" : "#FCE7F3",
-            color: creator.platform === "YouTube" ? "#DC2626" : "#BE185D",
-            padding: "10px 0", borderRadius: 10, width: "100%",
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
-            textDecoration: "none",
-          }}>
-          {creator.platform === "YouTube" ? "▶ Visit YouTube Channel" : "◈ Visit Instagram Profile"}
-        </a>
+          <div style={{ display: "flex", gap: 8 }}>
+          
+            href={creator.platform === "YouTube"
+              ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
+              : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
+            target="_blank" rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            style={{
+              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              background: creator.platform === "YouTube" ? "#FEE2E2" : "#FCE7F3",
+              color: creator.platform === "YouTube" ? "#DC2626" : "#BE185D",
+              padding: "10px 0", borderRadius: 10,
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
+              textDecoration: "none",
+            }}>
+            {creator.platform === "YouTube" ? "▶ YouTube" : "◈ Instagram"}
+          </a>
+          <button
+            onClick={e => { e.stopPropagation(); onClick(creator); }}
+            style={{
+              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              background: "#FFF0EB", color: "#FF6B35",
+              padding: "10px 0", borderRadius: 10, border: "none",
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
+              cursor: "pointer",
+            }}>
+            ⭐ Reviews
+          </button>
+        </div>
       </div>
     </div>
   );
