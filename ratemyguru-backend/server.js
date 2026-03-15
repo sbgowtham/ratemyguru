@@ -300,7 +300,7 @@ const { count: recentReviews } = await supabase
 if ((recentReviews || 0) >= 3) {
   return res.status(429).json({ error: "You're reviewing too fast. Please wait before submitting more reviews." });
 }
-const autoStatus = "pending";
+
 
     // New account check (account < 24hrs old = hold for manual review)
     const accountAge = (Date.now() - new Date(req.user.created_at)) / (1000 * 60 * 60);
