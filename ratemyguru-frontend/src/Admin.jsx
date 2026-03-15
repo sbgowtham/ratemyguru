@@ -226,7 +226,7 @@ function AllCreatorsTab() {
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete "${name}" permanently? This cannot be undone!`)) return;
     setActionLoading(id);
-    await adminFetch(`/api/admin/creators/${id}/delete`, { method: "DELETE" });
+    await adminFetch(`/api/admin/creators/${id}`, { method: "DELETE" });
     setCreators(prev => prev.filter(c => c.id !== id));
     setActionLoading(null);
   };
