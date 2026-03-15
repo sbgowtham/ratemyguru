@@ -288,7 +288,16 @@ function CreatorCard({ creator, onClick }) {
                 </div>
               )}
             </div>
-            <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{creator.handle}</div>
+            <a 
+  href={creator.platform === "YouTube" 
+    ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}` 
+    : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
+  target="_blank" rel="noopener noreferrer"
+  style={{ fontSize: 11, color: "#0EA5E9", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, textDecoration: "none" }}
+  onClick={e => e.stopPropagation()}
+>
+  {creator.handle} ↗
+</a>
             <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2, fontFamily: "'DM Sans', sans-serif" }}>
               📍 {creator.state !== "All States" ? `${creator.state}, ` : ""}{creator.country} · {creator.subscribers}
             </div>
