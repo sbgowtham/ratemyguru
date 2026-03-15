@@ -293,10 +293,14 @@ function CreatorCard({ creator, onClick }) {
     ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}` 
     : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
   target="_blank" rel="noopener noreferrer"
-  style={{ fontSize: 11, color: "#0EA5E9", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, textDecoration: "none" }}
-  onClick={e => e.stopPropagation()}
+  style={{ fontSize: 12, color: "#0EA5E9", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, textDecoration: "none", display: "flex", alignItems: "center", gap: 3 }}
 >
-  {creator.handle} ↗
+  {creator.handle}
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" strokeWidth="2.5" strokeLinecap="round">
+    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+    <polyline points="15 3 21 3 21 9"/>
+    <line x1="10" y1="14" x2="21" y2="3"/>
+  </svg>
 </a>
             <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2, fontFamily: "'DM Sans', sans-serif" }}>
               📍 {creator.state !== "All States" ? `${creator.state}, ` : ""}{creator.country} · {creator.subscribers}
