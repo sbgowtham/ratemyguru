@@ -451,19 +451,7 @@ function StatsTab({ stats }) {
     </div>
   );
 }
-// DELETE /api/admin/creators/:id/delete
-app.delete("/api/admin/creators/:id/delete", requireAdmin, async (req, res) => {
-  try {
-    // Delete reviews first
-    await supabase.from("reviews").delete().eq("creator_id", req.params.id);
-    // Then delete creator
-    const { error } = await supabase.from("creators").delete().eq("id", req.params.id);
-    if (error) throw error;
-    res.json({ message: "Creator deleted permanently" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+
 
 // ============================================
 // LOGIN SCREEN

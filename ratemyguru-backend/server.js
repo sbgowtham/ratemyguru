@@ -607,16 +607,15 @@ app.get("/api/sync/creator/:id", requireAdmin, async (req, res) => {
   res.json({ subscribers });
 });
 
-// DELETE /api/admin/creators/:id
-app.delete("/api/admin/creators/:id", requireAdmin, async (req, res) => {
+// DELETE /api/admin/creators/:id/delete
+app.delete("/api/admin/creators/:id/delete", requireAdmin, async (req, res) => {
   try {
-    const { error } = await supabase
-      .from("creators")
-      .delete()
-      .eq("id", req.params.id);
-
+    // Delete reviews first
+    await supabase.from("reviews").delete().eq("creator_id", req.params.id);
+    // Then delete creator
+    const { error } = await supabase.from("creators").delete().eq("id", req.params.id);
     if (error) throw error;
-    res.json({ message: "Creator deleted" });
+    res.json({ message: "Creator deleted permanently" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
