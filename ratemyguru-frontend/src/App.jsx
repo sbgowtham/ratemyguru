@@ -330,7 +330,7 @@ function CreatorCard({ creator, onClick }) {
         </div>
 		<div style={{ display: "flex", gap: 8 }}>
           
-            href={creator.platform === "YouTube"
+          <a  href={creator.platform === "YouTube"
               ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
               : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
             target="_blank" rel="noopener noreferrer"
@@ -362,39 +362,6 @@ function CreatorCard({ creator, onClick }) {
   );
 }
         
-          <div style={{ display: "flex", gap: 8 }}>
-          <a
-            href={creator.platform === "YouTube"
-              ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
-              : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
-            target="_blank" rel="noopener noreferrer"
-            onClick={e => e.stopPropagation()}
-            style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              background: creator.platform === "YouTube" ? "#FEE2E2" : "#FCE7F3",
-              color: creator.platform === "YouTube" ? "#DC2626" : "#BE185D",
-              padding: "10px 0", borderRadius: 10,
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
-              textDecoration: "none",
-            }}>
-            {creator.platform === "YouTube" ? "▶ YouTube" : "◈ Instagram"}
-          </a>
-          <button
-            onClick={e => { e.stopPropagation(); onClick(creator); }}
-            style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-              background: "#FFF0EB", color: "#FF6B35",
-              padding: "10px 0", borderRadius: 10, border: "none",
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
-              cursor: "pointer",
-            }}>
-            ⭐ Reviews
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 const SAMPLE_REVIEWS = [
   { name: "Arjun R.", role: "Data Engineer @ TCS", rating: 5, text: "Best Tamil content for data engineering. Anna explains Spark with real-world examples. Cleared my interview because of this channel!", date: "2 days ago", likes: 34, verified: true },
