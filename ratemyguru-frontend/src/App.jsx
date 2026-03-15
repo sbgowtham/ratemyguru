@@ -732,7 +732,7 @@ export default function RateMyGuru() {
     });
 }, []);
 
-  const filtered = (creators.length > 0 ? creators : MOCK_CREATORS).filter(c => {
+  const filtered = creators.filter(c => {
     const matchCat = selectedCategory === "All" || c.category === selectedCategory;
     const matchCountry = selectedCountry === "All Countries" || c.country === selectedCountry;
     const matchState = selectedState === "All States" || c.state === selectedState;
@@ -797,13 +797,13 @@ export default function RateMyGuru() {
 
           {/* Stats */}
           <div style={{ display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap" }}>
-            {[["1,200+", "Creators Listed"], ["48K+", "Verified Reviews"], ["100% Free", "Always"]].map(([num, label]) => (
-              <div key={label} style={{ textAlign: "center" }}>
-                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 800, color: "#FF6B35" }}>{num}</div>
-                <div style={{ fontSize: 11, color: "#475569", marginTop: 3, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{label}</div>
-              </div>
-            ))}
-          </div>
+  {[["100% Free", "Always"], ["LinkedIn Verified", "Reviews Only"]].map(([num, label]) => (
+    <div key={label} style={{ textAlign: "center" }}>
+      <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 800, color: "#FF6B35" }}>{num}</div>
+      <div style={{ fontSize: 11, color: "#475569", marginTop: 3, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{label}</div>
+    </div>
+  ))}
+</div>
         </div>
       </div>
 
