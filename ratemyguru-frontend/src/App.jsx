@@ -544,7 +544,7 @@ function ReviewModal({ creator, onClose }) {
 }
 
 function AddCreatorModal({ onClose }) {
-  const [form, setForm] = useState({ name: "", platform: "YouTube", youtube_id: "", instagram_id: "", category: "", country: "India", state: "", bio: "" });
+  const [form, setForm] = useState({ name: "", platform: "YouTube", youtube_id: "", instagram_id: "", category: "", customCategory: undefined, country: "India", state: "", bio: "" });
   const [submitted, setSubmitted] = useState(false);
   const [checking, setChecking] = useState(false);
 
@@ -661,10 +661,26 @@ const handleSubmit = async () => {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
                   <label style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, color: "#1E293B", display: "block", marginBottom: 6 }}>CATEGORY *</label>
-                  <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} style={{ width: "100%" }}>
-                    <option value="">Select...</option>
-                    {CATEGORIES.filter(c => c !== "All").map(c => <option key={c}>{c}</option>)}
-                  </select>
+                  <select value={form.category} onChange={e => {
+  if (e.target.value === "other") {
+    setForm({...form, category: ""});
+  } else {
+    setForm({...form, category: e.target.value, customCategory: ""});
+  }
+}} style={{ width: "100%" }}>
+  <option value="">Select...</option>
+  {CATEGORIES.filter(c => c !== "All").map(c => <option key={c}>{c}</option>)}
+  <option value="other">➕ Add Custom Category</option>
+</select>
+
+{form.category === "" && form.customCategory !== undefined && (
+  <input
+    value={form.customCategory || ""}
+    onChange={e => setForm({...form, customCategory: e.target.value, category: e.target.value})}
+    placeholder="Type your category e.g. Blockchain, Cybersecurity..."
+    style={{ width: "100%", padding: "10px 14px", border: "1.5px solid #FF6B35", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: "none", boxSizing: "border-box", marginTop: 8 }}
+  />
+)}
                 </div>
                 <div>
                   <label style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, color: "#1E293B", display: "block", marginBottom: 6 }}>COUNTRY *</label>
