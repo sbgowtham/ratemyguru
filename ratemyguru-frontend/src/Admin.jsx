@@ -226,7 +226,7 @@ function AllCreatorsTab() {
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete "${name}" permanently? This cannot be undone!`)) return;
     setActionLoading(id);
-    await adminFetch(`/api/admin/creators/${id}`, { method: "DELETE" });
+    await adminFetch(`/api/admin/creators/${id}/delete`, { method: "PUT" });
     setCreators(prev => prev.filter(c => c.id !== id));
     setActionLoading(null);
   };
@@ -495,7 +495,9 @@ function LoginScreen({ onLogin }) {
 // MAIN ADMIN APP
 // ============================================
 export default function AdminDashboard() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  return localStorage.getItem("rmg_admin_key") === (process.env.REACT_APP_ADMIN_KEY || "ratemyguru-admin-2026");
+});
   const [activeTab, setActiveTab] = useState("stats");
   const [stats, setStats] = useState(null);
   const [pendingCreators, setPendingCreators] = useState([]);

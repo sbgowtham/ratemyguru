@@ -608,7 +608,7 @@ app.get("/api/sync/creator/:id", requireAdmin, async (req, res) => {
 });
 
 // DELETE /api/admin/creators/:id/delete
-app.delete("/api/admin/creators/:id", requireAdmin, async (req, res) => {
+app.put("/api/admin/creators/:id/delete", requireAdmin, async (req, res) => {
   try {
     await supabase.from("reviews").delete().eq("creator_id", req.params.id);
     const { error } = await supabase.from("creators").delete().eq("id", req.params.id);
