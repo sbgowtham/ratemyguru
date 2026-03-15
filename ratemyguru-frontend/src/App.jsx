@@ -325,6 +325,13 @@ const SAMPLE_REVIEWS = [
 ];
 
 function ReviewModal({ creator, onClose }) {
+  // Normalize API fields
+  const c = {
+    ...creator,
+    rating: creator.rating || creator.avg_rating || 0,
+    reviewCount: creator.reviewCount || creator.review_count || 0,
+  };
+
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState("");
@@ -342,15 +349,15 @@ function ReviewModal({ creator, onClose }) {
             <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
               <div style={{
                 width: 56, height: 56, borderRadius: 16, flexShrink: 0,
-                background: creator.color + "18", border: `2px solid ${creator.color}30`,
+                background: c.color + "18", border: `2px solid ${c.color}30`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 22, fontWeight: 800, color: creator.color,
+                fontSize: 22, fontWeight: 800, color: c.color,
                 fontFamily: "'Fraunces', serif",
-              }}>{creator.avatar}</div>
+              }}>{c.avatar_letter || c.avatar || c.name?.[0]}</div>
               <div>
-                <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 18, color: "#0F1729", marginBottom: 2 }}>{creator.name}</div>
-                <div style={{ fontSize: 12, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{creator.category} · {creator.country}</div>
-                <StarRating rating={creator.rating} size="lg" />
+                <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 18, color: "#0F1729", marginBottom: 2 }}>{c.name}</div>
+                <div style={{ fontSize: 12, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{c.category} · {c.country}</div>
+                <StarRating rating={c.rating} size="lg" />
               </div>
             </div>
             <button onClick={onClose} style={{ background: "#F1F3F9", border: "none", cursor: "pointer", width: 32, height: 32, borderRadius: 8, fontSize: 16, color: "#94A3B8", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
@@ -359,9 +366,9 @@ function ReviewModal({ creator, onClose }) {
           {/* Rating breakdown */}
           <div style={{ background: "#FFFBF9", border: "1.5px solid #FFD4C2", borderRadius: 14, padding: "16px 20px", marginBottom: 20, display: "flex", gap: 24, alignItems: "center" }}>
             <div style={{ textAlign: "center", minWidth: 70 }}>
-              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 800, color: "#0F1729", lineHeight: 1 }}>{creator.rating}</div>
-              <StarRating rating={creator.rating} />
-              <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>{creator.reviewCount.toLocaleString()} reviews</div>
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 800, color: "#0F1729", lineHeight: 1 }}>{c.rating}</div>
+              <StarRating rating={c.rating} />
+              <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>{c.reviewCount.toLocaleString()} reviews</div>
             </div>
             <div style={{ flex: 1 }}>
               {[5,4,3,2,1].map(s => (
@@ -377,7 +384,7 @@ function ReviewModal({ creator, onClose }) {
 
           {/* Tabs */}
           <div style={{ display: "flex", borderBottom: "2px solid #F1F3F9" }}>
-            {[["reviews", `Reviews (${creator.reviewCount.toLocaleString()})`], ["write", "Write a Review"]].map(([tab, label]) => (
+            {[["reviews", `Reviews (${c.reviewCount.toLocaleString()})`], ["write", "Write a Review"]].map(([tab, label]) => (
               <button key={tab} onClick={() => setActiveTab(tab)} style={{
                 background: "none", border: "none", cursor: "pointer",
                 padding: "10px 20px",
