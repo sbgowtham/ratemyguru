@@ -546,13 +546,14 @@ try {
 const { data: user, error: userError } = await supabase
   .from("users")
   .upsert({
-    linkedin_id,
-    name,
-    email,
-    profile_picture,
-    headline, // ADD THIS
-    last_login: new Date().toISOString(),
-  }, { onConflict: "linkedin_id" })
+  linkedin_id,
+  name,
+  email,
+  profile_picture,
+  headline,
+  profile_url: `https://www.linkedin.com/in/${linkedin_id}`,
+  last_login: new Date().toISOString(),
+}, { onConflict: "linkedin_id" })
 
     if (userError) throw userError;
 

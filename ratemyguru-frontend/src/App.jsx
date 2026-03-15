@@ -434,7 +434,15 @@ function ReviewModal({ creator, onClose }) {
                       </div>
                       <div>
                         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <span style={{ fontWeight: 700, fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#0F1729" }}>{r.users?.name || "User"}</span>
+                          <a href={r.users?.profile_url || `https://www.linkedin.com/search/results/people/?keywords=${r.users?.name}`}
+  target="_blank" rel="noopener noreferrer"
+  style={{ fontWeight: 700, fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#0F1729", textDecoration: "none", display: "flex", alignItems: "center", gap: 5 }}>
+  {r.users?.name || "User"}
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="#0A66C2">
+    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+    <circle cx="4" cy="4" r="2" fill="#0A66C2"/>
+  </svg>
+</a>
                           {r.is_verified_learner && <span style={{ fontSize: 10, background: "#D1FAE5", color: "#065F46", padding: "1px 7px", borderRadius: 20, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}>✓ Verified</span>}
                         </div>
                         <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{r.users?.headline || ""}</div>
