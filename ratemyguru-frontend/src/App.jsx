@@ -332,6 +332,16 @@ function ReviewModal({ creator, onClose }) {
     reviewCount: creator.reviewCount || creator.review_count || 0,
   };
 
+  useEffect(() => {
+  fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews`)
+    .then(r => r.json())
+    .then(data => {
+      setReviews(data.reviews || []);
+      setReviewsLoading(false);
+    })
+    .catch(() => setReviewsLoading(false));
+}, [c.id]);
+
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState("");
@@ -400,31 +410,41 @@ function ReviewModal({ creator, onClose }) {
         {/* Tab content */}
         <div style={{ padding: "20px 24px 28px" }}>
           {activeTab === "reviews" ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              {SAMPLE_REVIEWS.map((r, i) => (
-                <div key={i} style={{ paddingBottom: 18, borderBottom: i < SAMPLE_REVIEWS.length - 1 ? "1px solid #F1F3F9" : "none" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ width: 34, height: 34, borderRadius: 10, background: "#F1F3F9", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 14, color: "#0F1729" }}>{r.name[0]}</div>
-                      <div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <span style={{ fontWeight: 700, fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#0F1729" }}>{r.name}</span>
-                          {r.verified && <span style={{ fontSize: 10, background: "#D1FAE5", color: "#065F46", padding: "1px 7px", borderRadius: 20, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}>✓ Verified</span>}
-                        </div>
-                        <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{r.role}</div>
-                      </div>
-                    </div>
-                    <span style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{r.date}</span>
-                  </div>
-                  <StarRating rating={r.rating} />
-                  <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7, margin: "10px 0", fontFamily: "'DM Sans', sans-serif" }}>{r.text}</p>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button style={{ background: "none", border: "1.5px solid #E2E8F0", borderRadius: 20, padding: "4px 14px", fontSize: 12, cursor: "pointer", color: "#475569", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>👍 {r.likes}</button>
-                    <button style={{ background: "none", border: "none", fontSize: 12, cursor: "pointer", color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Flag</button>
-                  </div>
-                </div>
-              ))}
+  <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+    {reviewsLoading ? (
+      <div style={{ textAlign: "center", padding: 40, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Loading reviews...</div>
+    ) : reviews.length === 0 ? (
+      <div style={{ textAlign: "center", padding: 40 }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
+        <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: 18, color: "#0F1729", marginBottom: 6 }}>No reviews yet</div>
+        <div style={{ fontSize: 13, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Be the first to review this creator!</div>
+      </div>
+    ) : reviews.map((r, i) => (
+      <div key={i} style={{ paddingBottom: 18, borderBottom: i < reviews.length - 1 ? "1px solid #F1F3F9" : "none" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: "#F1F3F9", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 14, color: "#0F1729" }}>
+              {r.users?.name?.[0] || "U"}
             </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ fontWeight: 700, fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: "#0F1729" }}>{r.users?.name || "User"}</span>
+                {r.is_verified_learner && <span style={{ fontSize: 10, background: "#D1FAE5", color: "#065F46", padding: "1px 7px", borderRadius: 20, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}>✓ Verified</span>}
+              </div>
+              <div style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{r.users?.headline || ""}</div>
+            </div>
+          </div>
+          <span style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{new Date(r.created_at).toLocaleDateString()}</span>
+        </div>
+        <StarRating rating={r.rating} />
+        <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7, margin: "10px 0", fontFamily: "'DM Sans', sans-serif" }}>{r.text}</p>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button style={{ background: "none", border: "1.5px solid #E2E8F0", borderRadius: 20, padding: "4px 14px", fontSize: 12, cursor: "pointer", color: "#475569", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>👍 {r.upvotes || 0}</button>
+          <button style={{ background: "none", border: "none", fontSize: 12, cursor: "pointer", color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Flag</button>
+        </div>
+      </div>
+    ))}
+  </div>
           ) : submitted ? (
             <div style={{ textAlign: "center", padding: "48px 20px" }}>
               <div style={{ fontSize: 56, marginBottom: 14 }}>🎉</div>

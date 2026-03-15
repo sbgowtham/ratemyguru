@@ -514,10 +514,23 @@ app.post("/api/auth/linkedin", async (req, res) => {
     const access_token = tokenData.access_token;
 
     // Step 2 — Get user profile via OpenID Connect userinfo endpoint
-    const userInfoRes = await fetch("https://api.linkedin.com/v2/userinfo", {
-      headers: { Authorization: `Bearer ${access_token}` },
-    });
-    const userInfo = await userInfoRes.json();
+   // Step 2 — Get user profile via OpenID Connect userinfo endpoint
+const userInfoRes = await fetch("https://api.linkedin.com/v2/userinfo", {
+  headers: { Authorization: `Bearer ${access_token}` },
+});
+const userInfo = await userInfoRes.json();
+
+// Step 2b — Get additional profile data (headline)
+let headline = "";
+try {
+  const profileRes = await fetch("https://api.linkedin.com/v2/me?projection=(id,localizedHeadline)", {
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+  const profileData = await profileRes.json();
+  headline = profileData.localizedHeadline || "";
+} catch (e) {
+  headline = "";
+}
 
     // userInfo contains: sub, name, given_name, family_name, email, picture
     const linkedin_id = userInfo.sub;
@@ -530,17 +543,16 @@ app.post("/api/auth/linkedin", async (req, res) => {
     }
 
     // Step 3 — Upsert user in Supabase
-    const { data: user, error: userError } = await supabase
-      .from("users")
-      .upsert({
-        linkedin_id,
-        name,
-        email,
-        profile_picture,
-        last_login: new Date().toISOString(),
-      }, { onConflict: "linkedin_id" })
-      .select()
-      .single();
+const { data: user, error: userError } = await supabase
+  .from("users")
+  .upsert({
+    linkedin_id,
+    name,
+    email,
+    profile_picture,
+    headline, // ADD THIS
+    last_login: new Date().toISOString(),
+  }, { onConflict: "linkedin_id" })
 
     if (userError) throw userError;
 
