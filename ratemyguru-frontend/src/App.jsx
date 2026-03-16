@@ -859,7 +859,11 @@ export default function RateMyGuru() {
     const matchCountry = selectedCountry === "All Countries" || c.country === selectedCountry;
     const matchState = selectedState === "All States" || c.state === selectedState;
     const matchSearch = !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.category.toLowerCase().includes(search.toLowerCase()) || c.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
-    const matchPlatform = selectedPlatform === "All" || c.platform === selectedPlatform || (selectedPlatform === "Website" && c.website);
+    const matchPlatform = selectedPlatform === "All" 
+  || (selectedPlatform === "YouTube" && c.youtube_id)
+  || (selectedPlatform === "Instagram" && c.instagram_id)
+  || (selectedPlatform === "Both" && c.youtube_id && c.instagram_id)
+  || (selectedPlatform === "Website" && c.website);
     return matchCat && matchCountry && matchState && matchSearch && matchPlatform;
   }).sort((a, b) => sort === "rating" ? b.rating - a.rating : sort === "reviews" ? b.reviewCount - a.reviewCount : 0);
 
