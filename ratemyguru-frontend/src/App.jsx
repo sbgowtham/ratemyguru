@@ -357,6 +357,12 @@ function CreatorCard({ creator, onClick }) {
             ⭐ Reviews
           </button>
         </div>
+		{(creator.website) && (
+        <a href={creator.website} target="_blank" rel="noopener noreferrer"
+          onClick={e => e.stopPropagation()}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 8, padding: "8px 0", background: "#F1F3F9", borderRadius: 10, fontSize: 12, color: "#475569", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, textDecoration: "none" }}>
+          🌐 {creator.website.replace("https://", "").replace("http://", "").replace("www.", "")}
+        </a>
       </div>
     </div>
   );
@@ -589,7 +595,7 @@ function ReviewModal({ creator, onClose }) {
 }
 
 function AddCreatorModal({ onClose }) {
-  const [form, setForm] = useState({ name: "", platform: "YouTube", youtube_id: "", instagram_id: "", category: "", customCategory: undefined, country: "India", state: "", bio: "" });
+  const [form, setForm] = useState({ name: "", platform: "YouTube", youtube_id: "", instagram_id: "", website: "", category: "", customCategory: undefined, country: "India", state: "", bio: "" });
   const [submitted, setSubmitted] = useState(false);
   const [checking, setChecking] = useState(false);
 
@@ -702,6 +708,11 @@ const handleSubmit = async () => {
                 </div>
               )}
 
+<div>
+  <label style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, color: "#1E293B", display: "block", marginBottom: 6 }}>WEBSITE <span style={{ fontWeight: 400, color: "#94A3B8" }}>(optional)</span></label>
+  <input value={form.website} onChange={e => setForm({...form, website: e.target.value})} placeholder="e.g. https://dataengineeringtamil.com"
+    style={{ width: "100%", padding: "10px 14px", border: "1.5px solid #E2E8F0", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+</div>
               {/* Category + Country */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
