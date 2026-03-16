@@ -359,14 +359,7 @@ function CreatorCard({ creator, onClick }) {
     ⭐ Reviews
   </button>
 </div>
-        {(creator.website) && (
-          <a href={creator.website} target="_blank" rel="noopener noreferrer"
-            onClick={e => e.stopPropagation()}
-            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 8, padding: "8px 0", background: "#F1F3F9", borderRadius: 10, fontSize: 12, color: "#475569", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, textDecoration: "none" }}>
-            🌐 {creator.website.replace("https://", "").replace("http://", "").replace("www.", "")}
-          </a>
-        )}
-      </div>
+      
     </div>
   );
 }
