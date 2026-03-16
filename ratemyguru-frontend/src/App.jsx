@@ -257,7 +257,23 @@ function PlatformBadge({ platform }) {
     </div>
   );
 }
-
+function BioText({ bio }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = bio && bio.length > 120;
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, margin: 0, fontFamily: "'DM Sans', sans-serif" }}>
+        {isLong && !expanded ? bio.slice(0, 120) + "..." : bio}
+      </p>
+      {isLong && (
+        <button onClick={e => { e.stopPropagation(); setExpanded(!expanded); }}
+          style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, padding: "4px 0 0 0" }}>
+          {expanded ? "Show less ↑" : "Read more ↓"}
+        </button>
+      )}
+    </div>
+  );
+}
 function CreatorCard({ creator, onClick }) {
   return (
     <div className="card-hover" onClick={() => onClick(creator)} style={{
@@ -310,9 +326,8 @@ function CreatorCard({ creator, onClick }) {
         <PlatformBadge platform={creator.platform} />
       </div>
 
-      <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, marginBottom: 14, fontFamily: "'DM Sans', sans-serif" }}>
-        {creator.bio}
-      </p>
+<BioText bio={creator.bio} />
+
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
         {creator.tags?.map(t => <span key={t} className="tag">{t}</span>)}
@@ -370,7 +385,22 @@ const SAMPLE_REVIEWS = [
   { name: "Priya M.", role: "Student, Anna University", rating: 5, text: "PySpark and SQL content is gold. The Tanglish teaching style makes complex topics super easy to understand.", date: "1 week ago", likes: 21, verified: false },
   { name: "Karthik S.", role: "Senior DE @ Infosys", rating: 4, text: "Great content overall. Would love more cloud-native topics in future. Solid channel for Tamil-speaking data folks.", date: "2 weeks ago", likes: 15, verified: true },
 ];
-
+function ReviewText({ text }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > 200;
+  return (
+    <div>
+      <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7, margin: "10px 0 4px", fontFamily: "'DM Sans', sans-serif" }}>
+        {isLong && !expanded ? text.slice(0, 200) + "..." : text}
+      </p>
+      {isLong && (
+        <button onClick={() => setExpanded(!expanded)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, padding: 0 }}>
+          {expanded ? "Show less ↑" : "Read more ↓"}
+        </button>
+      )}
+    </div>
+  );
+}
 function ReviewModal({ creator, onClose }) {
   // Normalize API fields
   const c = {
@@ -551,7 +581,7 @@ function ReviewModal({ creator, onClose }) {
                     <span style={{ fontSize: 11, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>{new Date(r.created_at).toLocaleDateString()}</span>
                   </div>
                   <StarRating rating={r.rating} />
-                  <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7, margin: "10px 0", fontFamily: "'DM Sans', sans-serif" }}>{r.text}</p>
+                  <ReviewText text={r.text} />
                   <div style={{ display: "flex", gap: 8 }}>
                     <button style={{ background: "none", border: "1.5px solid #E2E8F0", borderRadius: 20, padding: "4px 14px", fontSize: 12, cursor: "pointer", color: "#475569", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>👍 {r.upvotes || 0}</button>
                     <button style={{ background: "none", border: "none", fontSize: 12, cursor: "pointer", color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>Flag</button>
