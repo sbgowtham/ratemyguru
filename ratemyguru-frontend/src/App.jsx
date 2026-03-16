@@ -859,7 +859,7 @@ export default function RateMyGuru() {
     const matchCountry = selectedCountry === "All Countries" || c.country === selectedCountry;
     const matchState = selectedState === "All States" || c.state === selectedState;
     const matchSearch = !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.category.toLowerCase().includes(search.toLowerCase()) || c.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
-    const matchPlatform = selectedPlatform === "All" || c.platform === selectedPlatform;
+    const matchPlatform = selectedPlatform === "All" || c.platform === selectedPlatform || (selectedPlatform === "Website" && c.website);
     return matchCat && matchCountry && matchState && matchSearch && matchPlatform;
   }).sort((a, b) => sort === "rating" ? b.rating - a.rating : sort === "reviews" ? b.reviewCount - a.reviewCount : 0);
 
@@ -942,10 +942,10 @@ export default function RateMyGuru() {
         )}
         <div style={{ width: 1, height: 28, background: "#E2E8F0", margin: "0 4px" }} />
 <div style={{ display: "flex", gap: 7, flexWrap: "wrap", alignItems: "center" }}>
-  {["All", "YouTube", "Instagram", "Both"].map(p => (
+  {["All", "YouTube", "Instagram", "Both","Website"].map(p => (
     <button key={p} className={`filter-pill ${selectedPlatform === p ? "active" : ""}`}
       onClick={() => setSelectedPlatform(p)}>
-      {p === "YouTube" ? "▶ YouTube" : p === "Instagram" ? "◈ Instagram" : p === "Both" ? "⚡ Both" : "All Platforms"}
+      {p === "YouTube" ? "▶ YouTube" : p === "Instagram" ? "◈ Instagram" : p === "Both" ? "⚡ Both" : p === "Website" ? "🌐 Website" :"All Platforms"}
     </button>
   ))}
 </div>
