@@ -158,10 +158,10 @@ const instagram_id = req.body.instagram_id || null;
     let duplicateOf = null;
     if (youtube_id) {
       const { data: existing } = await supabase
-        .from("creators")
-        .select("id, name, status")
-        .eq("youtube_id", youtube_id)
-        .single();
+  .from("creators")
+  .select("id, name, status")
+  .ilike("youtube_id", youtube_id)
+  .single();
 
       if (existing) {
         // Log the duplicate attempt
@@ -181,10 +181,10 @@ const instagram_id = req.body.instagram_id || null;
 
     if (instagram_id) {
       const { data: existing } = await supabase
-        .from("creators")
-        .select("id, name, status")
-        .eq("instagram_id", instagram_id)
-        .single();
+  .from("creators")
+  .select("id, name, status")
+  .ilike("instagram_id", instagram_id)
+  .single();
 
       if (existing) {
         await supabase.from("creator_submissions").insert({
