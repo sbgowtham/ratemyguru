@@ -434,8 +434,7 @@ function ReviewModal({ creator, onClose }) {
   style={{ background: "#FFF0EB", border: "none", cursor: "pointer", padding: "7px 14px", borderRadius: 8, fontSize: 12, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>
   ✏️ Suggest Edit
 </button>
-<button onClick={onClose} style={{ background: "#F1F3F9"...}}>✕</button>
-          </div>
+<button onClick={onClose} style={{ background: "#F1F3F9", border: "none", cursor: "pointer", width: 32, height: 32, borderRadius: 8, fontSize: 16, color: "#94A3B8", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>          </div>
 
           <div style={{ background: "#FFFBF9", border: "1.5px solid #FFD4C2", borderRadius: 14, padding: "16px 20px", marginBottom: 20, display: "flex", gap: 24, alignItems: "center" }}>
             <div style={{ textAlign: "center", minWidth: 70 }}>
