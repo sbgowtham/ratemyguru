@@ -833,6 +833,7 @@ export default function RateMyGuru() {
   const [selectedCreator, setSelectedCreator] = useState(null);
   const [showAddCreator, setShowAddCreator] = useState(false);
   const [sort, setSort] = useState("rating");
+  const [selectedPlatform, setSelectedPlatform] = useState("All");
   const [loaded, setLoaded] = useState(false);
   const [user, setUser] = useState(getUser());
   const [creators, setCreators] = useState([]);
@@ -858,7 +859,8 @@ export default function RateMyGuru() {
     const matchCountry = selectedCountry === "All Countries" || c.country === selectedCountry;
     const matchState = selectedState === "All States" || c.state === selectedState;
     const matchSearch = !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.category.toLowerCase().includes(search.toLowerCase()) || c.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
-    return matchCat && matchCountry && matchState && matchSearch;
+    const matchPlatform = selectedPlatform === "All" || c.platform === selectedPlatform;
+    return matchCat && matchCountry && matchState && matchSearch && matchPlatform;
   }).sort((a, b) => sort === "rating" ? b.rating - a.rating : sort === "reviews" ? b.reviewCount - a.reviewCount : 0);
 
   return (
@@ -939,12 +941,20 @@ export default function RateMyGuru() {
           </select>
         )}
         <div style={{ width: 1, height: 28, background: "#E2E8F0", margin: "0 4px" }} />
-        <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
-          {CATEGORIES.map(cat => (
-            <button key={cat} className={`filter-pill ${selectedCategory === cat ? "active" : ""}`}
-              onClick={() => setSelectedCategory(cat)}>{cat}</button>
-          ))}
-        </div>
+<div style={{ display: "flex", gap: 7, flexWrap: "wrap", alignItems: "center" }}>
+  {["All", "YouTube", "Instagram", "Both"].map(p => (
+    <button key={p} className={`filter-pill ${selectedPlatform === p ? "active" : ""}`}
+      onClick={() => setSelectedPlatform(p)}>
+      {p === "YouTube" ? "▶ YouTube" : p === "Instagram" ? "◈ Instagram" : p === "Both" ? "⚡ Both" : "All Platforms"}
+    </button>
+  ))}
+</div>
+<div style={{ width: 1, height: 28, background: "#E2E8F0", margin: "0 4px" }} />
+<div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+  {CATEGORIES.map(cat => (
+    <button key={cat} className={`filter-pill ${selectedCategory === cat ? "active" : ""}`} onClick={() => setSelectedCategory(cat)}>{cat}</button>
+  ))}
+</div>
       </div>
 
       {/* Creator Grid */}
