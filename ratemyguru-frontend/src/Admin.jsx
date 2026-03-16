@@ -411,6 +411,80 @@ function ReviewsTab({ reviews, setReviews, loading }) {
     </div>
   );
 }
+// ============================================
+// EDITS TAB
+// ============================================
+function EditsTab({ edits, setEdits, loading }) {
+  const [actionLoading, setActionLoading] = useState(null);
+
+  const handleApprove = async (id) => {
+    setActionLoading(id);
+    await adminFetch(`/api/admin/edits/${id}/approve`, { method: "PUT" });
+    setEdits(prev => prev.filter(e => e.id !== id));
+    setActionLoading(null);
+  };
+
+  const handleReject = async (id) => {
+    setActionLoading(id);
+    await adminFetch(`/api/admin/edits/${id}/reject`, { method: "PUT" });
+    setEdits(prev => prev.filter(e => e.id !== id));
+    setActionLoading(null);
+  };
+
+  return (
+    <div>
+      <div style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 800, marginBottom: 6 }}>Pending Edits</div>
+      <div style={{ fontSize: 13, color: "var(--text2)", fontFamily: "var(--font-body)", marginBottom: 20 }}>{edits.length} edits awaiting approval</div>
+
+      {loading ? (
+        <div style={{ textAlign: "center", padding: 60 }}><div className="spinner" /></div>
+      ) : edits.length === 0 ? (
+        <div style={{ textAlign: "center", padding: 60 }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
+          <div style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 800 }}>No pending edits!</div>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {edits.map((e, i) => (
+            <div key={e.id} className="fade-up" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: 20, animationDelay: `${i * 0.05}s` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                <div>
+                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>
+                    {e.creators?.name}
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--text3)", fontFamily: "var(--font-body)" }}>
+                    Submitted by {e.users?.name} · {new Date(e.created_at).toLocaleDateString()}
+                  </div>
+                </div>
+                <span className="badge badge-pending">⏳ Pending</span>
+              </div>
+
+              {/* Show proposed changes */}
+              <div style={{ background: "var(--surface2)", borderRadius: 10, padding: 16, marginBottom: 16 }}>
+                <div style={{ fontSize: 12, color: "var(--text3)", fontFamily: "var(--font-body)", fontWeight: 700, marginBottom: 10, letterSpacing: 0.5 }}>PROPOSED CHANGES</div>
+                {Object.entries(e.proposed_changes).map(([key, value]) => (
+                  <div key={key} style={{ display: "flex", gap: 12, marginBottom: 8, alignItems: "flex-start" }}>
+                    <span style={{ fontSize: 11, color: "var(--saffron)", fontFamily: "var(--font-body)", fontWeight: 700, minWidth: 100, textTransform: "uppercase" }}>{key.replace("_", " ")}</span>
+                    <span style={{ fontSize: 13, color: "var(--text)", fontFamily: "var(--font-body)" }}>{value}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+                {actionLoading === e.id ? <div className="spinner" /> : (
+                  <>
+                    <button className="btn btn-approve" onClick={() => handleApprove(e.id)}>✓ Approve & Apply</button>
+                    <button className="btn btn-reject" onClick={() => handleReject(e.id)}>✕ Reject</button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ============================================
 // STATS TAB
@@ -503,29 +577,33 @@ export default function AdminDashboard() {
   const [pendingCreators, setPendingCreators] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [pendingEdits, setPendingEdits] = useState([]);
 
   const loadData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [statsData, creatorsData, reviewsData] = await Promise.all([
-        adminFetch("/api/admin/stats"),
-        adminFetch("/api/admin/creators/pending"),
-        adminFetch("/api/admin/reviews/pending"),
-      ]);
-      if (!statsData.error) setStats(statsData);
-      if (Array.isArray(creatorsData)) setPendingCreators(creatorsData);
-      if (Array.isArray(reviewsData)) setReviews(reviewsData);
-    } catch (e) { /* keep existing data */ }
-    setLoading(false);
-  }, []);
-
+  setLoading(true);
+  try {
+    const [statsData, creatorsData, reviewsData, editsData] = await Promise.all([
+      adminFetch("/api/admin/stats"),
+      adminFetch("/api/admin/creators/pending"),
+      adminFetch("/api/admin/reviews/pending"),
+      adminFetch("/api/admin/edits/pending"),
+    ]);
+    if (!statsData.error) setStats(statsData);
+    if (Array.isArray(creatorsData)) setPendingCreators(creatorsData);
+    if (Array.isArray(reviewsData)) setReviews(reviewsData);
+    if (Array.isArray(editsData)) setPendingEdits(editsData);
+  } catch (e) { /* keep existing data */ }
+  setLoading(false);
+}, []);
   useEffect(() => { if (isLoggedIn) loadData(); }, [isLoggedIn, loadData]);
 
   const navItems = [
     { id: "stats", icon: "📊", label: "Overview" },
     { id: "creators", icon: "⏳", label: "Pending", count: pendingCreators.length },
     { id: "all_creators", icon: "👨‍🏫", label: "All Creators" },
+	{ id: "edits", icon: "✏️", label: "Edits", count: pendingEdits.length },
     { id: "reviews", icon: "⭐", label: "Reviews", count: reviews.length },
+	{ id: "edits", icon: "✏️", label: "Edits", count: pendingEdits.length },
   ];
 
   if (!isLoggedIn) return (
@@ -576,6 +654,7 @@ export default function AdminDashboard() {
           {activeTab === "creators" && <CreatorsTab creators={pendingCreators} setCreators={setPendingCreators} loading={loading} />}
           {activeTab === "all_creators" && <AllCreatorsTab />}
           {activeTab === "reviews" && <ReviewsTab reviews={reviews} setReviews={setReviews} loading={loading} />}
+		  {activeTab === "edits" && <EditsTab edits={pendingEdits} setEdits={setPendingEdits} loading={loading} />}
         </div>
       </div>
     </>

@@ -136,6 +136,91 @@ app.get("/api/creators/:id", async (req, res) => {
   }
 });
 
+// POST /api/creators/:id/edit — submit edit request
+app.post("/api/creators/:id/edit", requireAuth, async (req, res) => {
+  try {
+    const { name, youtube_id, instagram_id, website, bio, subscribers, tags } = req.body;
+    const proposed_changes = {};
+    if (name) proposed_changes.name = name;
+    if (youtube_id) proposed_changes.youtube_id = youtube_id;
+    if (instagram_id) proposed_changes.instagram_id = instagram_id;
+    if (website) proposed_changes.website = website;
+    if (bio) proposed_changes.bio = bio;
+    if (subscribers) proposed_changes.subscribers = subscribers;
+    if (tags) proposed_changes.tags = tags;
+
+    if (Object.keys(proposed_changes).length === 0) {
+      return res.status(400).json({ error: "No changes provided" });
+    }
+
+    const { data, error } = await supabase
+      .from("creator_edits")
+      .insert({
+        creator_id: req.params.id,
+        submitted_by: req.user.id,
+        proposed_changes,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.status(201).json({ message: "Edit submitted for review", edit_id: data.id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/admin/edits/pending
+app.get("/api/admin/edits/pending", requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("creator_edits")
+      .select("*, creators(name, youtube_id, instagram_id), users(name)")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true });
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/admin/edits/:id/approve
+app.put("/api/admin/edits/:id/approve", requireAdmin, async (req, res) => {
+  try {
+    const { data: edit, error: editError } = await supabase
+      .from("creator_edits")
+      .select("*")
+      .eq("id", req.params.id)
+      .single();
+    if (editError) throw editError;
+
+    // Apply changes to creator
+    const { error } = await supabase
+      .from("creators")
+      .update(edit.proposed_changes)
+      .eq("id", edit.creator_id);
+    if (error) throw error;
+
+    // Mark edit as approved
+    await supabase.from("creator_edits").update({ status: "approved" }).eq("id", req.params.id);
+    res.json({ message: "Edit approved and applied" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/admin/edits/:id/reject
+app.put("/api/admin/edits/:id/reject", requireAdmin, async (req, res) => {
+  try {
+    await supabase.from("creator_edits").update({ status: "rejected" }).eq("id", req.params.id);
+    res.json({ message: "Edit rejected" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST /api/creators — submit new creator (requires auth)
 app.post("/api/creators", requireAuth, strictLimiter, async (req, res) => {
   try {

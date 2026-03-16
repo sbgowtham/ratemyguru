@@ -391,6 +391,7 @@ function ReviewModal({ creator, onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState("reviews");
   const [reviews, setReviews] = useState([]);
+  const [showEditForm, setShowEditForm] = useState(false);
   const [reviewsLoading, setReviewsLoading] = useState(true);
 
   useEffect(() => {
@@ -428,7 +429,11 @@ function ReviewModal({ creator, onClose }) {
                 <StarRating rating={c.rating} size="lg" />
               </div>
             </div>
-            <button onClick={onClose} style={{ background: "#F1F3F9", border: "none", cursor: "pointer", width: 32, height: 32, borderRadius: 8, fontSize: 16, color: "#94A3B8", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+            <button onClick={() => setShowEditForm(true)}
+  style={{ background: "#FFF0EB", border: "none", cursor: "pointer", padding: "7px 14px", borderRadius: 8, fontSize: 12, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>
+  ✏️ Suggest Edit
+</button>
+<button onClick={onClose} style={{ background: "#F1F3F9"...}}>✕</button>
           </div>
 
           <div style={{ background: "#FFFBF9", border: "1.5px solid #FFD4C2", borderRadius: 14, padding: "16px 20px", marginBottom: 20, display: "flex", gap: 24, alignItems: "center" }}>
@@ -462,7 +467,56 @@ function ReviewModal({ creator, onClose }) {
             ))}
           </div>
         </div>
-
+{showEditForm && (
+  <div style={{ background: "#FFFBF9", border: "1.5px solid #FFD4C2", borderRadius: 14, padding: 20, marginTop: 16 }}>
+    <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 16, color: "#0F1729", marginBottom: 4 }}>Suggest an Edit</div>
+    <div style={{ fontSize: 12, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif", marginBottom: 16 }}>Only fill fields you want to change</div>
+    {[
+      { label: "Name", key: "name", placeholder: c.name },
+      { label: "YouTube ID", key: "youtube_id", placeholder: c.youtube_id || "e.g. dataengineeringvideos" },
+      { label: "Instagram ID", key: "instagram_id", placeholder: c.instagram_id || "e.g. dataengineeringtamil" },
+      { label: "Website", key: "website", placeholder: c.website || "https://..." },
+      { label: "Subscribers", key: "subscribers", placeholder: c.subscribers || "e.g. 300K+" },
+    ].map(f => (
+      <div key={f.key} style={{ marginBottom: 12 }}>
+        <label style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 11, color: "#1E293B", display: "block", marginBottom: 4 }}>{f.label.toUpperCase()}</label>
+        <input
+          id={`edit_${f.key}`}
+          placeholder={f.placeholder}
+          style={{ width: "100%", padding: "9px 12px", border: "1.5px solid #E2E8F0", borderRadius: 9, fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: "none", boxSizing: "border-box" }}
+        />
+      </div>
+    ))}
+    <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+      <button className="btn-primary"
+        onClick={async () => {
+          const token = localStorage.getItem("rmg_token");
+          if (!token) { alert("Please login first!"); return; }
+          const changes = {};
+          ["name", "youtube_id", "instagram_id", "website", "subscribers"].forEach(key => {
+            const val = document.getElementById(`edit_${key}`)?.value?.trim();
+            if (val) changes[key] = val;
+          });
+          if (Object.keys(changes).length === 0) { alert("No changes entered!"); return; }
+          const res = await fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/edit`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+            body: JSON.stringify(changes),
+          });
+          const data = await res.json();
+          if (res.ok) { alert("Edit submitted! Admin will review it."); setShowEditForm(false); }
+          else alert(data.error || "Something went wrong");
+        }}
+        style={{ flex: 1, padding: "11px 0", fontSize: 13 }}>
+        Submit Edit
+      </button>
+      <button onClick={() => setShowEditForm(false)}
+        style={{ padding: "11px 18px", background: "#F1F3F9", border: "none", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, cursor: "pointer", color: "#475569" }}>
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
         <div style={{ padding: "20px 24px 28px" }}>
           {activeTab === "reviews" ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
