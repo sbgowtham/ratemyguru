@@ -328,35 +328,37 @@ function CreatorCard({ creator, onClick }) {
             </span>
           </div>
         </div>
-		<div style={{ display: "flex", gap: 8 }}>
-          
-          <a  href={creator.platform === "YouTube"
-              ? `https://www.youtube.com/@${creator.youtube_id || creator.platformId}`
-              : `https://www.instagram.com/${creator.instagram_id || creator.platformId}`}
-            target="_blank" rel="noopener noreferrer"
-            onClick={e => e.stopPropagation()}
-            style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              background: creator.platform === "YouTube" ? "#FEE2E2" : "#FCE7F3",
-              color: creator.platform === "YouTube" ? "#DC2626" : "#BE185D",
-              padding: "10px 0", borderRadius: 10,
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
-              textDecoration: "none",
-            }}>
-            {creator.platform === "YouTube" ? "▶ YouTube" : "◈ Instagram"}
-          </a>
-          <button
-            onClick={e => { e.stopPropagation(); onClick(creator); }}
-            style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-              background: "#FFF0EB", color: "#FF6B35",
-              padding: "10px 0", borderRadius: 10, border: "none",
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13,
-              cursor: "pointer",
-            }}>
-            ⭐ Reviews
-          </button>
-        </div>
+		<div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+  {(creator.youtube_id || creator.platform === "YouTube") && (
+    <a href={`https://www.youtube.com/@${creator.youtube_id || creator.platformId}`}
+      target="_blank" rel="noopener noreferrer"
+      onClick={e => e.stopPropagation()}
+      style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: "#FEE2E2", color: "#DC2626", padding: "10px 0", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, textDecoration: "none", minWidth: 80 }}>
+      ▶ YouTube
+    </a>
+  )}
+  {(creator.instagram_id) && (
+    <a href={`https://www.instagram.com/${creator.instagram_id}`}
+      target="_blank" rel="noopener noreferrer"
+      onClick={e => e.stopPropagation()}
+      style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: "#FCE7F3", color: "#BE185D", padding: "10px 0", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, textDecoration: "none", minWidth: 80 }}>
+      ◈ Instagram
+    </a>
+  )}
+  {(creator.website) && (
+    <a href={creator.website}
+      target="_blank" rel="noopener noreferrer"
+      onClick={e => e.stopPropagation()}
+      style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: "#F1F3F9", color: "#475569", padding: "10px 0", borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, textDecoration: "none", minWidth: 80 }}>
+      🌐 Website
+    </a>
+  )}
+  <button
+    onClick={e => { e.stopPropagation(); onClick(creator); }}
+    style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: "#FFF0EB", color: "#FF6B35", padding: "10px 0", borderRadius: 10, border: "none", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, cursor: "pointer", minWidth: 80 }}>
+    ⭐ Reviews
+  </button>
+</div>
         {(creator.website) && (
           <a href={creator.website} target="_blank" rel="noopener noreferrer"
             onClick={e => e.stopPropagation()}
