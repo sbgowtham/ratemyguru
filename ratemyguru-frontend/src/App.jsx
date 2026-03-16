@@ -872,14 +872,25 @@ export default function RateMyGuru() {
 
   useEffect(() => {
   setTimeout(() => setLoaded(true), 100);
-  fetch("https://ratemyguru-production.up.railway.app/api/creators")
+
+  // Load from cache instantly
+  const cached = localStorage.getItem("rmg_creators");
+  if (cached) {
+    setCreators(JSON.parse(cached));
+    setCreatorsLoading(false);
+  }
+
+  // Then fetch fresh data in background
+  fetch(`https://ratemyguru-production.up.railway.app/api/creators?t=${Date.now()}`)
     .then(r => r.json())
     .then(data => {
-      setCreators(data.creators || []);
+      if (data.creators) {
+        setCreators(data.creators);
+        localStorage.setItem("rmg_creators", JSON.stringify(data.creators));
+      }
       setCreatorsLoading(false);
     })
     .catch(() => {
-      setCreators([]);
       setCreatorsLoading(false);
     });
 }, []);
