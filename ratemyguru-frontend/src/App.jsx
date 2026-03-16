@@ -359,7 +359,7 @@ function CreatorCard({ creator, onClick }) {
     ⭐ Reviews
   </button>
 </div>
-      
+</div>
     </div>
   );
 }
