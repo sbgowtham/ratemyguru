@@ -359,7 +359,7 @@ app.post("/api/creators/:id/reviews", requireAuth, strictLimiter, async (req, re
 
     // Validation
     if (!rating || rating < 1 || rating > 5) return res.status(400).json({ error: "Rating must be 1-5" });
-    if (!text || text.length < 50) return res.status(400).json({ error: "Review must be at least 50 characters" });
+    if (!text || text.length < 30) return res.status(400).json({ error: "Review must be at least 50 characters" });
 
     // LinkedIn quality check
     const qualityIssues = checkLinkedInQuality(req.user);
@@ -634,14 +634,16 @@ try {
 const { data: user, error: userError } = await supabase
   .from("users")
   .upsert({
-  linkedin_id,
-  name,
-  email,
-  profile_picture,
-  headline,
-  profile_url: `https://www.linkedin.com/in/${linkedin_id}`,
-  last_login: new Date().toISOString(),
-}, { onConflict: "linkedin_id" })
+    linkedin_id,
+    name,
+    email,
+    profile_picture,
+    headline,
+    profile_url: `https://www.linkedin.com/in/${linkedin_id}`,
+    last_login: new Date().toISOString(),
+  }, { onConflict: "linkedin_id" })
+  .select()
+  .single()
 
     if (userError) throw userError;
 

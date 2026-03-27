@@ -606,7 +606,12 @@ function ReviewModal({ creator, onClose }) {
           ) : (
             <div>
               <div style={{ marginBottom: 20 }}>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, color: "#1E293B", marginBottom: 10 }}>Your Rating *</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, color: "#1E293B", marginBottom: 10 }}>
+  Your Rating *
+  {rating === 0 && review.length > 0 && (
+    <span style={{ color: "#EF4444", fontSize: 12, fontWeight: 500, marginLeft: 8 }}>← Please select a star rating!</span>
+  )}
+</div>
                 <div style={{ display: "flex", gap: 8 }}>
                   {[1,2,3,4,5].map(s => (
                     <svg key={s} width={36} height={36} viewBox="0 0 24 24"
@@ -632,8 +637,8 @@ function ReviewModal({ creator, onClose }) {
                 <textarea value={review} onChange={e => setReview(e.target.value)}
                   placeholder="Share your honest experience — what did you learn? Would you recommend this creator?"
                   style={{ width: "100%", minHeight: 120, padding: "12px 14px", border: "1.5px solid #E2E8F0", borderRadius: 12, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#1E293B", resize: "vertical", lineHeight: 1.6, boxSizing: "border-box" }} />
-                <div style={{ fontSize: 11, color: review.length >= 50 ? "#10B981" : "#94A3B8", textAlign: "right", fontFamily: "'DM Sans', sans-serif", marginTop: 4, fontWeight: 600 }}>
-                  {review.length} / 50 min {review.length >= 50 ? "✓" : ""}
+                <div style={{ fontSize: 11, color: review.length >= 30 ? "#10B981" : "#94A3B8", textAlign: "right", fontFamily: "'DM Sans', sans-serif", marginTop: 4, fontWeight: 600 }}>
+                  {review.length} / 50 min {review.length >= 30 ? "✓" : ""}
                 </div>
               </div>
               <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 12, color: "#1E40AF", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, display: "flex", gap: 8, alignItems: "flex-start" }}>
@@ -642,7 +647,7 @@ function ReviewModal({ creator, onClose }) {
               </div>
               <button className="btn-primary"
   onClick={async () => {
-    if (review.length < 50 || rating === 0) return;
+    if (review.length < 30 || rating === 0) return;
     const token = localStorage.getItem("rmg_token");
     if (!token) {
       const redirectUri = encodeURIComponent("https://ratemyguru.in/auth/linkedin/callback");
@@ -662,7 +667,7 @@ function ReviewModal({ creator, onClose }) {
       alert("Something went wrong. Try again.");
     }
   }}
-  style={{ width: "100%", padding: 14, fontSize: 15, opacity: review.length >= 50 && rating > 0 ? 1 : 0.5, cursor: review.length >= 50 && rating > 0 ? "pointer" : "not-allowed" }}>
+  style={{ width: "100%", padding: 14, fontSize: 15, opacity: review.length >= 30 && rating > 0 ? 1 : 0.5, cursor: review.length >= 30 && rating > 0 ? "pointer" : "not-allowed" }}>
   {localStorage.getItem("rmg_token") ? "Submit Review" : "Login with LinkedIn & Submit"}
 </button>
             </div>
