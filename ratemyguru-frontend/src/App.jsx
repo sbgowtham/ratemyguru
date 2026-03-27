@@ -670,7 +670,7 @@ function ReviewModal({ creator, onClose }) {
                 style={{ width: "100%", padding: 14, fontSize: 15, opacity: review.length >= 50 && rating > 0 ? 1 : 0.5, cursor: review.length >= 50 && rating > 0 ? "pointer" : "not-allowed" }}>
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>
-                  Login with LinkedIn & Submit Review
+                  {localStorage.getItem("rmg_token") ? "Submit Review" : "Login with LinkedIn to Submit"}
                 </span>
               </button>
             </div>
@@ -686,11 +686,14 @@ function AddCreatorModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [checking, setChecking] = useState(false);
 
-const handleSubmit = async () => {
+onClick={async () => {
+  if (review.length < 50 || rating === 0) return;
   const token = localStorage.getItem("rmg_token");
   if (!token) {
-    alert("Please login with LinkedIn first!");
-    onClose();
+    // Save review to localStorage so we can restore after login
+    localStorage.setItem("rmg_pending_review", JSON.stringify({ rating, text: review, creatorId: c.id }));
+    const redirectUri = encodeURIComponent("https://ratemyguru.in/auth/linkedin/callback");
+    window.location.href = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=86nqmaogrsbobc&redirect_uri=${redirectUri}&scope=openid%20profile%20email&state=xyz123`;
     return;
   }
 
