@@ -670,7 +670,7 @@ function ReviewModal({ creator, onClose }) {
                 style={{ width: "100%", padding: 14, fontSize: 15, opacity: review.length >= 50 && rating > 0 ? 1 : 0.5, cursor: review.length >= 50 && rating > 0 ? "pointer" : "not-allowed" }}>
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>
-                  Login with LinkedIn & Submit
+                  Login with LinkedIn & Submit Review
                 </span>
               </button>
             </div>
