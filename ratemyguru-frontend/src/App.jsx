@@ -686,51 +686,41 @@ function AddCreatorModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [checking, setChecking] = useState(false);
 
-onClick={async () => {
-  if (review.length < 50 || rating === 0) return;
-  const token = localStorage.getItem("rmg_token");
-  if (!token) {
-    // Save review to localStorage so we can restore after login
-    localStorage.setItem("rmg_pending_review", JSON.stringify({ rating, text: review, creatorId: c.id }));
-    const redirectUri = encodeURIComponent("https://ratemyguru.in/auth/linkedin/callback");
-    window.location.href = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=86nqmaogrsbobc&redirect_uri=${redirectUri}&scope=openid%20profile%20email&state=xyz123`;
-    return;
-  }
-
-  console.log("Form data:", form); // ADD THIS
-  console.log("Token:", token); // ADD THIS
-
-  setChecking(true);
-  try {
-    const res = await fetch("https://ratemyguru-production.up.railway.app/api/creators", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify(form),
-    });
-    
-    const data = await res.json();
-    console.log("Response:", data); // ADD THIS
-    
-    if (res.status === 409) {
-      alert(`Duplicate! ${data.duplicate.name} already exists.`);
-      setChecking(false);
+  const handleSubmit = async () => {
+    const token = localStorage.getItem("rmg_token");
+    if (!token) {
+      alert("Please login with LinkedIn first before adding a creator!");
+      onClose();
       return;
     }
-    if (res.status === 400) {
-      alert(`Validation error: ${data.error}`);
+    setChecking(true);
+    try {
+      const res = await fetch("https://ratemyguru-production.up.railway.app/api/creators", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.status === 409) {
+        alert(`Duplicate! ${data.duplicate.name} already exists.`);
+        setChecking(false);
+        return;
+      }
+      if (res.status === 400) {
+        alert(`Validation error: ${data.error}`);
+        setChecking(false);
+        return;
+      }
       setChecking(false);
-      return;
+      setSubmitted(true);
+    } catch (err) {
+      alert("Something went wrong. Try again.");
+      setChecking(false);
     }
-    setChecking(false);
-    setSubmitted(true);
-  } catch (err) {
-    alert("Something went wrong. Try again.");
-    setChecking(false);
-  }
-};
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
