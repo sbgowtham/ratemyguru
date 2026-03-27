@@ -647,7 +647,8 @@ function ReviewModal({ creator, onClose }) {
               </div>
               <button className="btn-primary"
   onClick={async () => {
-    if (review.length < 30 || rating === 0) return;
+    if (rating === 0) { alert("⭐ Please select a star rating first!"); return; }
+    if (review.length < 30) { alert("✍️ Review is too short! Minimum 30 characters."); return; }
     const token = localStorage.getItem("rmg_token");
     if (!token) {
       const redirectUri = encodeURIComponent("https://ratemyguru.in/auth/linkedin/callback");
@@ -667,7 +668,8 @@ function ReviewModal({ creator, onClose }) {
       alert("Something went wrong. Try again.");
     }
   }}
-  style={{ width: "100%", padding: 14, fontSize: 15, opacity: review.length >= 30 && rating > 0 ? 1 : 0.5, cursor: review.length >= 30 && rating > 0 ? "pointer" : "not-allowed" }}>
+  style={{ width: "100%", padding: 14, fontSize: 15 }}>
+
   {localStorage.getItem("rmg_token") ? "Submit Review" : "Login with LinkedIn & Submit"}
 </button>
             </div>

@@ -390,7 +390,8 @@ if ((recentReviews || 0) >= 3) {
 
     // New account check (account < 24hrs old = hold for manual review)
     const accountAge = (Date.now() - new Date(req.user.created_at)) / (1000 * 60 * 60);
-    const autoStatus = accountAge < 24 ? "pending" : "pending"; // all go to pending for now, admin approves
+    //const autoStatus = accountAge < 24 ? "pending" : "pending"; // all go to pending for now, admin approves
+const autoStatus = "approved";
 
     const { data: review, error } = await supabase
       .from("reviews")
