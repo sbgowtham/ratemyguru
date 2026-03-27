@@ -598,8 +598,6 @@ const [totalReviews, setTotalReviews] = useState(0);
                 </div>
               ))}
 			  
-			  
-            </div>
 			
 
               {totalReviews > 5 && (
