@@ -459,7 +459,14 @@ function ReviewModal({ creator, onClose }) {
   style={{ background: "#FFF0EB", border: "none", cursor: "pointer", padding: "7px 14px", borderRadius: 8, fontSize: 12, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>
   ✏️ Suggest Edit
 </button>
-<button onClick={onClose} style={{ background: "#F1F3F9", border: "none", cursor: "pointer", width: 32, height: 32, borderRadius: 8, fontSize: 16, color: "#94A3B8", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>          </div>
+<button onClick={() => {
+  const url = `https://ratemyguru.in/?creator=${c.slug}`;
+  navigator.clipboard.writeText(url);
+  alert("Profile link copied! Share it anywhere 🎉");
+}} style={{ background: "#EFF6FF", border: "none", cursor: "pointer", padding: "7px 14px", borderRadius: 8, fontSize: 12, color: "#3B82F6", fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>
+  🔗 Copy Link
+</button>
+<button onClick={onClose} style={{ background: "#F1F3F9", border: "none", cursor: "pointer", width: 32, height: 32, borderRadius: 8, fontSize: 16, color: "#94A3B8", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>         </div>
 
           <div style={{ background: "#FFFBF9", border: "1.5px solid #FFD4C2", borderRadius: 14, padding: "16px 20px", marginBottom: 20, display: "flex", gap: 24, alignItems: "center" }}>
             <div style={{ textAlign: "center", minWidth: 70 }}>
@@ -870,14 +877,22 @@ export default function RateMyGuru() {
   const [creatorsLoading, setCreatorsLoading] = useState(true);
   const handleLogout = () => { logout(); setUser(null); };
 
-  useEffect(() => {
+ useEffect(() => {
   setTimeout(() => setLoaded(true), 100);
 
   // Load from cache instantly
   const cached = localStorage.getItem("rmg_creators");
   if (cached) {
-    setCreators(JSON.parse(cached));
+    const parsed = JSON.parse(cached);
+    setCreators(parsed);
     setCreatorsLoading(false);
+    // Auto open creator from URL param
+    const params = new URLSearchParams(window.location.search);
+    const slugParam = params.get("creator");
+    if (slugParam) {
+      const found = parsed.find(c => c.slug === slugParam);
+      if (found) setSelectedCreator(found);
+    }
   }
 
   // Then fetch fresh data in background
@@ -887,12 +902,17 @@ export default function RateMyGuru() {
       if (data.creators) {
         setCreators(data.creators);
         localStorage.setItem("rmg_creators", JSON.stringify(data.creators));
+        // Auto open creator from URL param
+        const params = new URLSearchParams(window.location.search);
+        const slugParam = params.get("creator");
+        if (slugParam) {
+          const found = data.creators.find(c => c.slug === slugParam);
+          if (found) setSelectedCreator(found);
+        }
       }
       setCreatorsLoading(false);
     })
-    .catch(() => {
-      setCreatorsLoading(false);
-    });
+    .catch(() => setCreatorsLoading(false));
 }, []);
 
   const filtered = creators.filter(c => {
