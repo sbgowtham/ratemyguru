@@ -459,6 +459,7 @@ function ReviewModal({ creator, onClose }) {
   style={{ background: "#FFF0EB", border: "none", cursor: "pointer", padding: "7px 14px", borderRadius: 8, fontSize: 12, color: "#FF6B35", fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>
   ✏️ Suggest Edit
 </button>
+
 <button onClick={() => {
   const url = `https://ratemyguru.in/?creator=${c.slug}`;
   navigator.clipboard.writeText(url);
