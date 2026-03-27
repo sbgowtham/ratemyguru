@@ -638,7 +638,7 @@ function ReviewModal({ creator, onClose }) {
                   placeholder="Share your honest experience — what did you learn? Would you recommend this creator?"
                   style={{ width: "100%", minHeight: 120, padding: "12px 14px", border: "1.5px solid #E2E8F0", borderRadius: 12, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#1E293B", resize: "vertical", lineHeight: 1.6, boxSizing: "border-box" }} />
                 <div style={{ fontSize: 11, color: review.length >= 30 ? "#10B981" : "#94A3B8", textAlign: "right", fontFamily: "'DM Sans', sans-serif", marginTop: 4, fontWeight: 600 }}>
-                  {review.length} / 50 min {review.length >= 30 ? "✓" : ""}
+                  {review.length} / 30 min {review.length >= 30 ? "✓" : ""}
                 </div>
               </div>
               <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 12, color: "#1E40AF", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, display: "flex", gap: 8, alignItems: "flex-start" }}>
