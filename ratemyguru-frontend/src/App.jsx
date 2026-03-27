@@ -601,11 +601,6 @@ const [totalReviews, setTotalReviews] = useState(0);
 			  
             </div>
 			
-			) : reviews.map((r, i) => (
-                <div key={i} style={{ paddingBottom: 18, borderBottom: i < reviews.length - 1 ? "1px solid #F1F3F9" : "none" }}>
-                  ...
-                </div>
-              ))}
 
               {totalReviews > 5 && (
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginTop: 16, paddingTop: 16, borderTop: "1px solid #F1F3F9" }}>
