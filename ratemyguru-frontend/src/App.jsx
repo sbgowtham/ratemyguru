@@ -419,20 +419,21 @@ function ReviewModal({ creator, onClose }) {
   const [reviews, setReviews] = useState([]);
   const [showEditForm, setShowEditForm] = useState(false);
   const [reviewsLoading, setReviewsLoading] = useState(true);
-
+const [reviewPage, setReviewPage] = useState(1);
+const [totalReviews, setTotalReviews] = useState(0);
   useEffect(() => {
-    if (c.id) {
-      fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews`)
-        .then(r => r.json())
-        .then(data => {
-          setReviews(data.reviews || []);
-          setReviewsLoading(false);
-        })
-        .catch(() => setReviewsLoading(false));
-    } else {
-      setReviewsLoading(false);
-    }
-  }, [c.id]);
+  if (c.id) {
+    setReviewsLoading(true);
+    fetch(`https://ratemyguru-production.up.railway.app/api/creators/${c.id}/reviews?page=${reviewPage}&limit=5`)
+      .then(r => r.json())
+      .then(data => {
+        setReviews(data.reviews || []);
+        setTotalReviews(data.total || 0);
+        setReviewsLoading(false);
+      })
+      .catch(() => setReviewsLoading(false));
+  }
+}, [c.id, reviewPage]);
 
   if (!creator) return null;
 
@@ -596,7 +597,38 @@ function ReviewModal({ creator, onClose }) {
                   </div>
                 </div>
               ))}
+			  
+			  
             </div>
+			
+			) : reviews.map((r, i) => (
+                <div key={i} style={{ paddingBottom: 18, borderBottom: i < reviews.length - 1 ? "1px solid #F1F3F9" : "none" }}>
+                  ...
+                </div>
+              ))}
+
+              {totalReviews > 5 && (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginTop: 16, paddingTop: 16, borderTop: "1px solid #F1F3F9" }}>
+                  <button
+                    onClick={() => setReviewPage(p => Math.max(1, p - 1))}
+                    disabled={reviewPage === 1}
+                    style={{ padding: "7px 16px", border: "1.5px solid #E2E8F0", borderRadius: 8, background: "white", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, cursor: reviewPage === 1 ? "not-allowed" : "pointer", color: reviewPage === 1 ? "#94A3B8" : "#0F1729" }}>
+                    ← Prev
+                  </button>
+                  <span style={{ fontSize: 13, color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>
+                    Page {reviewPage} of {Math.ceil(totalReviews / 5)}
+                  </span>
+                  <button
+                    onClick={() => setReviewPage(p => p + 1)}
+                    disabled={reviewPage >= Math.ceil(totalReviews / 5)}
+                    style={{ padding: "7px 16px", border: "1.5px solid #E2E8F0", borderRadius: 8, background: "white", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, cursor: reviewPage >= Math.ceil(totalReviews / 5) ? "not-allowed" : "pointer", color: reviewPage >= Math.ceil(totalReviews / 5) ? "#94A3B8" : "#0F1729" }}>
+                    Next →
+                  </button>
+                </div>
+              )}
+
+            </div>
+			
           ) : submitted ? (
             <div style={{ textAlign: "center", padding: "48px 20px" }}>
               <div style={{ fontSize: 56, marginBottom: 14 }}>🎉</div>
@@ -632,7 +664,7 @@ function ReviewModal({ creator, onClose }) {
               </div>
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, color: "#1E293B", marginBottom: 8 }}>
-                  Your Review * <span style={{ fontWeight: 500, color: "#94A3B8" }}>(min 50 characters)</span>
+                  Your Review * <span style={{ fontWeight: 500, color: "#94A3B8" }}>(min 30 characters)</span>
                 </div>
                 <textarea value={review} onChange={e => setReview(e.target.value)}
                   placeholder="Share your honest experience — what did you learn? Would you recommend this creator?"

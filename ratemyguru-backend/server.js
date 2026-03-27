@@ -406,10 +406,7 @@ const autoStatus = "approved";
       .select()
       .single();
 
-    if (error) {
-      if (error.code === "23505") return res.status(409).json({ error: "You already reviewed this creator" });
-      throw error;
-    }
+    if (error) throw error;
 
     res.status(201).json({ message: "Review submitted for approval. Goes live within 24hrs.", review_id: review.id });
   } catch (err) {
