@@ -97,7 +97,7 @@ app.get("/api/creators", async (req, res) => {
 
     let query = supabase
       .from("creators")
-      .select("id, name, platform, youtube_id, instagram_id, website, category, country, state, bio, avatar_letter, avatar_color, subscribers, tags, avg_rating, review_count, verified", { count: "exact" })
+      .select("id, name, platform, youtube_id, instagram_id, website, slug, category, country, state, bio, avatar_letter, avatar_color, subscribers, tags, avg_rating, review_count, verified", { count: "exact" })
       .eq("status", "approved")
       .range(offset, offset + limit - 1);
 
