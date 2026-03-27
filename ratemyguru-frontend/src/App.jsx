@@ -702,7 +702,7 @@ const [totalReviews, setTotalReviews] = useState(0);
   }}
   style={{ width: "100%", padding: 14, fontSize: 15 }}>
 
-  {localStorage.getItem("rmg_token") ? "Submit Review" : "Login with LinkedIn & Submit"}
+  Submit Review
 </button>
             </div>
           )}
